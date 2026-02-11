@@ -7,7 +7,7 @@
     <title>{{ $title ?? 'Hanni & Alfonso — 24 Octubre 2025' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600&family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600&family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -26,6 +26,7 @@
         }
 
         .font-display { font-family: 'Playfair Display', Georgia, serif; }
+        .font-script { font-family: 'Pinyon Script', cursive; }
         .font-body { font-family: 'Outfit', system-ui, sans-serif; }
         .font-accent { font-family: 'Cormorant', Georgia, serif; }
 
