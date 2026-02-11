@@ -2,10 +2,10 @@
 
 @section('content')
 {{-- Desktop: centered card floating on ivory. Mobile: full bleed --}}
-<div class="min-h-svh flex items-center justify-center p-0 md:p-8 lg:p-12" style="background: var(--ivory);">
+<div class="h-dvh md:h-auto md:min-h-svh flex items-center justify-center p-0 md:p-8 lg:p-12 overflow-hidden" style="background: var(--ivory);">
 
     {{-- The invitation card --}}
-    <div class="invitation-card relative w-full md:max-w-[460px] lg:max-w-[500px] md:rounded-sm overflow-hidden" style="min-height: 100svh; max-height: 100svh; md:min-height: auto; md:max-height: none;">
+    <div class="invitation-card relative w-full md:max-w-[460px] lg:max-w-[500px] md:rounded-sm overflow-hidden" style="height: 100dvh; max-height: 100dvh;">
 
         {{-- Illustration fills the card --}}
         <picture>
@@ -68,7 +68,7 @@
     /* Card behavior: full viewport on mobile, elegant card on desktop */
     @media (min-width: 768px) {
         .invitation-card {
-            min-height: 0 !important;
+            height: auto !important;
             max-height: none !important;
             aspect-ratio: 3 / 4.5;
             box-shadow:
