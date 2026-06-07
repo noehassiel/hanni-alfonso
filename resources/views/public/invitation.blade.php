@@ -315,6 +315,32 @@ $couplePhotos = [
 {{-- ── Envelope Overlay ─────────────────────────────────────────── --}}
 <audio id="env-audio" src="{{ asset('audi.mp3') }}" preload="auto"></audio>
 
+{{-- Fixed mute button — appears once audio starts --}}
+<button id="mute-btn"
+        aria-label="Silenciar música"
+        style="position:fixed;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));right:1.25rem;
+               z-index:100;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);
+               background:rgba(44,42,38,0.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+               cursor:pointer;display:flex;align-items:center;justify-content:center;
+               opacity:0;pointer-events:none;transition:border-color 0.2s,background 0.2s;
+               -webkit-tap-highlight-color:transparent;">
+    {{-- Sound on --}}
+    <svg id="icon-sound" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+         stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    {{-- Muted --}}
+    <svg id="icon-muted" class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+         stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+         style="display:none;">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/>
+        <line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+</button>
+
 <div id="envelope-overlay" style="position:fixed;inset:0;z-index:50;background:rgba(245,240,232,0.97);">
     <div style="position:absolute;inset:-12%;">
         <img id="env-back" src="{{ asset('img/envelop-removebg-preview.png') }}"
@@ -765,6 +791,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const flap      = document.getElementById('env-flap');
     const audio     = document.getElementById('env-audio');
     const mainEl    = document.getElementById('main-content');
+    const muteBtn   = document.getElementById('mute-btn');
+    const iconSound = document.getElementById('icon-sound');
+    const iconMuted = document.getElementById('icon-muted');
+
+    // Mute toggle
+    if (muteBtn && audio) {
+        muteBtn.addEventListener('click', function () {
+            audio.muted = !audio.muted;
+            iconSound.style.display = audio.muted ? 'none'  : '';
+            iconMuted.style.display = audio.muted ? ''      : 'none';
+            muteBtn.setAttribute('aria-label', audio.muted ? 'Activar música' : 'Silenciar música');
+            window.haptics?.trigger('light');
+        });
+    }
 
     function revealMain () {
         gsap.to(mainEl, { opacity: 1, duration: 0.6, ease: 'power2.out',
@@ -780,7 +820,18 @@ document.addEventListener('DOMContentLoaded', function () {
         triggered = true;
         overlay.style.pointerEvents = 'none';
         window.haptics?.trigger([{duration: 1000}], {intensity: 1});
-        if (audio) { audio.currentTime = 0; const p = audio.play(); if (p) p.catch(function(){}); }
+        if (audio) {
+            audio.currentTime = 0;
+            const p = audio.play();
+            if (p) p.catch(function(){});
+            // Fade in mute button after a short delay
+            if (muteBtn) {
+                setTimeout(function () {
+                    muteBtn.style.opacity  = '1';
+                    muteBtn.style.pointerEvents = 'auto';
+                }, 800);
+            }
+        }
 
         const tl = gsap.timeline();
         tl.to([sealWrap, flap], { y: '-120vh', duration: 2.6, ease: 'power2.inOut', stagger: 0.12 })
