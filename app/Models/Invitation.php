@@ -17,6 +17,8 @@ class Invitation extends Model
         'access_code',
         'magic_link_token',
         'email',
+        'otp_code',
+        'otp_expires_at',
         'phone',
         'max_guests',
         'personal_message',
