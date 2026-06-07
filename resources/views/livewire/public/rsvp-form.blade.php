@@ -31,7 +31,7 @@
                           style="color:var(--autumn-sienna);">No podrás asistir</span>
                 @endif
             </div>
-            <p class="font-body text-xs px-4 leading-relaxed" style="color:var(--olive-light);">
+            <p class="font-body text-xs px-4 leading-relaxed" style="color:var(--olive);">
                 Ya has respondido. Puedes actualizar tu respuesta enviando el formulario nuevamente.
             </p>
         </div>
@@ -61,7 +61,7 @@
                          style="min-height:52px;border-radius:2px;padding:0.875rem 1rem;"
                          :style="sel === '1'
                              ? 'border:1px solid var(--olive);color:var(--olive);background:rgba(138,154,123,0.07);'
-                             : 'border:1px solid var(--parchment);color:var(--olive-light);'">
+                             : 'border:1px solid var(--parchment);color:var(--olive);'">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
@@ -77,7 +77,7 @@
                          style="min-height:52px;border-radius:2px;padding:0.875rem 1rem;"
                          :style="sel === '0'
                              ? 'border:1px solid var(--autumn-sienna);color:var(--autumn-sienna);background:rgba(196,78,10,0.05);'
-                             : 'border:1px solid var(--parchment);color:var(--olive-light);'">
+                             : 'border:1px solid var(--parchment);color:var(--olive);'">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -107,7 +107,7 @@
 
                     {{-- Guest label --}}
                     <p class="font-body text-[9px] tracking-[0.3em] uppercase"
-                       style="color:var(--bronze-light);">
+                       style="color:var(--olive);">
                         @if ($i === 0)
                             Titular de la invitación
                         @else
@@ -118,7 +118,7 @@
                     {{-- Name --}}
                     <div>
                         <label class="block font-body text-[10px] tracking-[0.2em] uppercase mb-2"
-                               style="color:var(--bronze-light);">Nombre completo</label>
+                               style="color:var(--olive);">Nombre completo</label>
                         <input type="text" wire:model="guests.{{ $i }}.name"
                                class="wedding-input" placeholder="Nombre completo"
                                autocomplete="name">
@@ -130,7 +130,7 @@
                     {{-- Per-guest attending — hidden when main toggle is No --}}
                     <div x-show="$wire.attending == 1" x-transition.opacity.duration.200ms>
                         <label class="block font-body text-[10px] tracking-[0.2em] uppercase mb-3"
-                               style="color:var(--bronze-light);">¿Asistirá?</label>
+                               style="color:var(--olive);">¿Asistirá?</label>
 
                         <div x-data="{ guestAtt: {{ (int)($guest['attending'] ?? 1) }} }"
                              class="flex gap-6">
@@ -181,7 +181,7 @@
 
                     {{-- Not attending message --}}
                     <div x-show="$wire.attending == 0" x-transition.opacity.duration.200ms>
-                        <p class="font-body text-xs italic" style="color:var(--olive-light);">
+                        <p class="font-body text-xs italic" style="color:var(--olive);">
                             Marcado como no asistente
                         </p>
                     </div>
@@ -189,7 +189,7 @@
                     {{-- Dietary --}}
                     <div>
                         <label class="block font-body text-[10px] tracking-[0.2em] uppercase mb-2"
-                               style="color:var(--bronze-light);">Restricciones alimentarias</label>
+                               style="color:var(--olive);">Restricciones alimentarias</label>
                         <input type="text" wire:model="guests.{{ $i }}.dietary_restrictions"
                                class="wedding-input" placeholder="Alergias, vegetariano, etc."
                                autocomplete="off">

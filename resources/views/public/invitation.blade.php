@@ -62,10 +62,10 @@
         /* ─── Section base ────────────────── */
         .section-label {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.625rem;
-            letter-spacing: 0.35em;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
-            color: var(--bronze-light);
+            color: var(--olive);
         }
 
         .section-rule {
@@ -114,7 +114,6 @@
         .hero-content {
             position: relative;
             z-index: 3;
-            padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         .hero-names {
@@ -164,16 +163,16 @@
 
         .date-month {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.35em;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             color: var(--autumn-sienna);
         }
 
         .date-year {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--olive-light);
+            font-size: 1.625rem;
+            color: var(--olive);
             font-weight: 400;
         }
 
@@ -184,12 +183,12 @@
             gap: 0.5rem;
             padding: 0.875rem 1.5rem;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.6875rem;
-            letter-spacing: 0.2em;
+            font-size: 0.75rem;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            border: 1px solid var(--parchment);
+            border: 1px solid var(--bronze-light);
             border-radius: 2px;
-            color: var(--olive-light);
+            color: var(--charcoal-soft);
             background: transparent;
             transition: border-color 0.25s, color 0.25s, background 0.25s;
             text-decoration: none;
@@ -292,7 +291,7 @@
             font-size: 0.6875rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--bronze-light);
+            color: var(--olive);
             text-align: center;
             margin-top: 1.5rem;
         }
@@ -309,10 +308,10 @@
 
         .swatch-label {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.5625rem;
+            font-size: 0.6875rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--olive-light);
+            color: var(--olive);
             text-align: center;
             margin-top: 0.5rem;
         }
@@ -433,7 +432,7 @@
 
             <div class="hero-content w-full text-center px-6 pb-12 sm:pb-16">
 
-                <p class="section-label text-white/50 mb-4 js-hidden" id="hero-label">Celebra con nosotros</p>
+                <p class="section-label text-white mb-4 js-hidden" id="hero-label">Celebra con nosotros</p>
 
                 <h1 class="hero-names mb-4 js-hidden" id="hero-names">
                     Hannia <span class="hero-amp">&</span> Alfonso
@@ -447,13 +446,6 @@
                         4:30 de la tarde
                     </p>
                 </div>
-            </div>
-
-            <div id="scroll-hint"
-                class="js-hidden absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-                style="z-index:3;">
-                <span class="section-label text-white/30">Desliza</span>
-                <div class="scroll-dot"></div>
             </div>
         </section>
 
@@ -481,7 +473,7 @@
                 </div>
 
                 <p class="font-accent italic text-2xl sm:text-3xl mt-2 mb-10 js-hidden" data-anim
-                    style="color: var(--olive-light);">4:30 de la tarde</p>
+                    style="color: var(--olive);">4:30 de la tarde</p>
 
                 <span class="section-rule mb-10 block js-hidden" data-anim></span>
 
@@ -537,7 +529,7 @@
                         style="border-bottom:1px solid var(--bronze-light);border-right:1px solid var(--bronze-light);">
                     </div>
 
-                    <p class="font-accent text-lg italic" style="color: var(--olive-light);">Querido/a</p>
+                    <p class="font-accent text-lg italic" style="color: var(--olive);">Querido/a</p>
                     <p class="font-display text-3xl sm:text-4xl mt-2" style="color:var(--charcoal);font-weight:500;">
                         {{ $invitation->group_name }}
                     </p>
@@ -546,7 +538,7 @@
                         <div class="mx-auto mt-6"
                             style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--bronze-light),transparent);">
                         </div>
-                        <p class="font-accent text-base italic mt-6 leading-relaxed" style="color:var(--olive-light);">
+                        <p class="font-accent text-base italic mt-6 leading-relaxed" style="color:var(--olive);">
                             {{ $invitation->personal_message }}</p>
                     @endif
                 </div>
@@ -589,7 +581,7 @@
                     Purísima de Cubos
                 </h2>
 
-                <p class="font-accent italic text-lg mb-1 js-hidden" data-anim style="color:var(--olive-light);">
+                <p class="font-accent italic text-lg mb-1 js-hidden" data-anim style="color:var(--olive);">
                     Querétaro, México
                 </p>
 
@@ -600,7 +592,7 @@
                 <p class="font-body text-sm mb-1 js-hidden" data-anim style="color:var(--olive);">
                     Carr. Querétaro-Tequisquiapan 707
                 </p>
-                <p class="font-body text-sm mb-8 js-hidden" data-anim style="color:var(--olive-light);">
+                <p class="font-body text-sm mb-8 js-hidden" data-anim style="color:var(--olive);">
                     Purísima de Cubos, 76295 Qro.
                 </p>
 
@@ -774,7 +766,7 @@
                 <span class="section-rule block mb-6 js-hidden" data-anim></span>
                 <h2 class="font-display text-2xl sm:text-3xl mb-4 js-hidden" data-anim
                     style="color:var(--charcoal);font-weight:400;">Código de Vestimenta</h2>
-                <p class="font-accent italic text-lg mb-10 js-hidden" data-anim style="color:var(--olive-light);">Paleta
+                <p class="font-accent italic text-lg mb-10 js-hidden" data-anim style="color:var(--olive);">Paleta
                     otoñal · Octubre 2026</p>
 
                 {{-- Swatches --}}
@@ -805,16 +797,16 @@
                 <div class="grid grid-cols-2 gap-4 mb-8 text-left js-hidden" data-anim>
                     <div class="p-5"
                         style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
-                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2"
-                            style="color:var(--bronze-light);">Ellas</p>
+                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2" style="color:var(--olive);">Ellas
+                        </p>
                         <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
                             Vestido elegante en la paleta otoñal
                         </p>
                     </div>
                     <div class="p-5"
                         style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
-                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2"
-                            style="color:var(--bronze-light);">Ellos</p>
+                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2" style="color:var(--olive);">Ellos
+                        </p>
                         <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
                             Traje formal, sin restricción de color
                         </p>
@@ -846,7 +838,7 @@
                     <span class="section-rule block mb-4 js-hidden" data-anim></span>
                     <h2 class="font-display text-2xl sm:text-3xl mb-2 js-hidden" data-anim
                         style="color:var(--charcoal);font-weight:400;">Hospedaje cercano</h2>
-                    <p class="font-accent italic js-hidden" data-anim style="color:var(--olive-light);">
+                    <p class="font-accent italic js-hidden" data-anim style="color:var(--olive);">
                         Te recomendamos reservar con anticipación
                     </p>
                 </div>
@@ -859,8 +851,9 @@
                             <span class="hotel-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
                             <div>
                                 <p class="font-body text-[9px] tracking-[0.2em] uppercase mb-0.5"
-                                    style="color:var(--bronze-light);">Opción {{ $i + 1 }}</p>
-                                <p class="inline-flex items-center gap-1 font-body text-xs" style="color:var(--olive);">
+                                    style="color:var(--olive);">Opción {{ $i + 1 }}</p>
+                                <p class="inline-flex items-center gap-1 font-body text-xs"
+                                    style="color:var(--charcoal-soft);">
                                     Ver en mapa
                                     <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
