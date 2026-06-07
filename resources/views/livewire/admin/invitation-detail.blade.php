@@ -124,7 +124,7 @@
                 <div class="space-y-3">
                     <button wire:click="sendInvitation" wire:loading.attr="disabled"
                         class="w-full bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium py-2 px-4 rounded-lg transition">
-                        <span wire:loading.remove wire:target="sendInvitation">
+                        <span wire:loading.remove wire:click="sendInvitation">
                             {{ $invitation->invitation_sent_at ? 'Reenviar Invitación' : 'Enviar Invitación' }}
                         </span>
                         <span wire:loading wire:target="sendInvitation">Enviando...</span>
@@ -146,7 +146,8 @@
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">Mensaje WhatsApp</h3>
                 <div class="bg-gray-50 rounded-lg p-3 mb-3 overflow-hidden">
-                    <p class="text-xs text-gray-700 whitespace-pre-wrap break-all font-sans leading-relaxed">{{ $this->getWhatsappMessage() }}</p>
+                    <p class="text-xs text-gray-700 whitespace-pre-wrap break-all font-sans leading-relaxed">
+                        {{ $this->getWhatsappMessage() }}</p>
                 </div>
                 <div class="flex gap-2">
                     <button wire:click="copyWhatsappMessage"
