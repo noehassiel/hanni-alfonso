@@ -2,457 +2,991 @@
 
 @section('content')
 
-    {{-- ── Envelope Opening Overlay ─────────────────────────────────────────── --}}
-    <audio id="env-audio" src="{{ asset('audi.mp3') }}" preload="auto"></audio>
+@php
+$googleCalUrl = 'https://calendar.google.com/calendar/render?' . http_build_query([
+    'action'   => 'TEMPLATE',
+    'text'     => 'Boda Hannia & Alfonso',
+    'dates'    => '20261024T163000/20261024T220000',
+    'ctz'      => 'America/Mexico_City',
+    'location' => 'Carr. Querétaro-Tequisquiapan 707, Purísima de Cubos, 76295 Querétaro, Qro.',
+    'details'  => "¡Los esperamos en nuestra boda!\nMapa: https://maps.app.goo.gl/x1WDacDi6BWHyx9H6",
+]);
 
-    <div id="envelope-overlay" style="position: fixed; inset: 0; z-index: 50; background: rgba(245, 240, 232, 0.97);">
-        {{-- Stage extends -12% past viewport edges to bleed over any transparent PNG padding --}}
-        <div style="position: absolute; inset: -12%;">
+$hotels = [
+    ['url' => 'https://maps.app.goo.gl/1Prb9YiZVrLGeZF99?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/ixoYv71KLv3zNzzv8?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/K7BHCf63TBWMstYF7?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/C8tVcctSse5He9Kr5?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/RDsVU5zvgMbsTHdT8?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/eKTrrgVt4fTWAqWWA?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/E1HNQBTQzEzboioj8?g_st=iw'],
+    ['url' => 'https://maps.app.goo.gl/QnYJWEoeQxYvAu4i6?g_st=iw'],
+];
 
-            {{-- Layer 1: envelope back — static --}}
-            <img id="env-back" src="{{ asset('img/envelop-removebg-preview.png') }}"
-                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; z-index: 0;"
-                alt="" draggable="false">
+$couplePhotos = [
+    'couple-photo-bw-groom-lifting-bride-spinning.jpg',
+    'couple-photo-bw-embracing-hacienda-corridor.jpg',
+    'couple-photo-bw-sitting-hacienda-steps.jpg',
+    'couple-photo-color-descending-hacienda-steps.jpg',
+    'couple-photo-color-iron-staircase-stone-wall.jpg',
+    'couple-photo-color-walking-toward-chapel.jpg',
+    'couple-photo-silhouette-kissing-arched-window.jpg',
+];
+@endphp
 
-            {{-- Layer 2: flap — 3D-rotates open --}}
-            <img id="env-flap" src="{{ asset('img/flap-removebg-preview.png') }}"
-                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; transform-origin: center top; z-index: 10;"
-                alt="" draggable="false">
+<style>
+    :root {
+        --bg-dark: #16120e;
+        --autumn-burgundy: #7B1B1B;
+        --autumn-amber:    #D4881A;
+        --autumn-forest:   #1C5C3A;
+        --autumn-sienna:   #C44E0A;
+        --autumn-caramel:  #9B6A18;
+        --hero-overlay:    rgba(16, 10, 6, 0.55);
+    }
 
-            {{-- Layer 3: wax seal — click target --}}
-            <div id="seal-wrapper"
-                style="position: absolute; left: 50%; top: 51.5%; transform: translate(-50%, -50%); width: 36%; aspect-ratio: 1; z-index: 20;">
-                <img id="env-seal" src="{{ asset('img/wax-seal-removebg-preview.png') }}"
-                    style="width: 100%; height: 100%; object-fit: contain; cursor: pointer; display: block; user-select: none; -webkit-user-select: none; touch-action: manipulation;"
-                    alt="Sello de cera" draggable="false">
-            </div>
+    /* Lenis — prevent flash before init */
+    html.lenis { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 
+    /* ─── Section base ────────────────── */
+    .section-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.625rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--bronze-light);
+    }
+    .section-rule {
+        display: block;
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--bronze-light), transparent);
+        margin: 0 auto;
+    }
+
+    /* ─── Hero ───────────────────────── */
+    #hero { height: 100dvh; }
+    #leaves-canvas {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 2;
+    }
+    .hero-bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: center top;
+        z-index: 0;
+    }
+    .hero-gradient {
+        position: absolute; inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(16,10,6,0.15) 0%,
+            rgba(16,10,6,0.10) 35%,
+            rgba(16,10,6,0.55) 65%,
+            rgba(16,10,6,0.92) 100%
+        );
+        z-index: 1;
+    }
+    .hero-content {
+        position: relative; z-index: 3;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .hero-names {
+        font-family: 'Pinyon Script', cursive;
+        font-size: clamp(4rem, 18vw, 9rem);
+        color: #fff;
+        line-height: 1;
+    }
+    .hero-amp {
+        font-family: 'Cormorant', serif;
+        font-style: italic;
+        color: var(--autumn-amber);
+    }
+    .scroll-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.5);
+        animation: scrollBounce 1.6s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+        0%, 100% { transform: translateY(0); opacity: 0.5; }
+        50%       { transform: translateY(8px); opacity: 1; }
+    }
+
+    /* ─── Fecha ──────────────────────── */
+    .date-day {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(5rem, 22vw, 10rem);
+        font-weight: 400;
+        line-height: 1;
+        color: var(--charcoal);
+        letter-spacing: -0.03em;
+    }
+    .date-month {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--autumn-sienna);
+    }
+    .date-year {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--olive-light);
+        font-weight: 400;
+    }
+    .cal-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        border: 1px solid var(--parchment);
+        border-radius: 2px;
+        color: var(--olive-light);
+        background: transparent;
+        transition: border-color 0.25s, color 0.25s, background 0.25s;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        min-height: 48px;
+    }
+    .cal-btn:active {
+        border-color: var(--autumn-sienna);
+        color: var(--autumn-sienna);
+        background: rgba(196,78,10,0.04);
+    }
+
+    /* ─── RSVP section ───────────────── */
+    .rsvp-bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    /* ─── Venue section ──────────────── */
+    .venue-illus {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: center bottom;
+        z-index: 0;
+    }
+    .venue-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(245,240,232,0.98) 0%,
+            rgba(245,240,232,0.88) 50%,
+            rgba(245,240,232,0.96) 100%
+        );
+        z-index: 1;
+    }
+
+    /* ─── Photo Polaroids ────────────── */
+    .photo-scatter {
+        position: relative;
+        height: 460px;
+        max-width: 340px;
+        margin: 0 auto;
+        overflow: visible;
+    }
+    .polaroid {
+        position: absolute;
+        width: 200px;
+        background: #fff;
+        padding: 8px 8px 28px;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1);
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        will-change: transform;
+        transition: box-shadow 0.2s;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .polaroid:active { cursor: grabbing; }
+    .polaroid.lifted {
+        box-shadow: 0 18px 48px rgba(0,0,0,0.28), 0 4px 12px rgba(0,0,0,0.14);
+    }
+    .polaroid img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+        pointer-events: none;
+    }
+    .envelope-visual {
+        position: absolute;
+        bottom: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 180px;
+        opacity: 0.25;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .drag-hint {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--bronze-light);
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    /* ─── Dress code ─────────────────── */
+    .swatch {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,0.6);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        flex-shrink: 0;
+    }
+    .swatch-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.5625rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--olive-light);
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+    .dress-warning {
+        border-left: 3px solid var(--autumn-sienna);
+        padding-left: 1rem;
+    }
+
+    /* ─── Hotels ─────────────────────── */
+    .hotel-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.25rem 1rem;
+        border: 1px solid var(--parchment);
+        border-radius: 2px;
+        text-decoration: none;
+        background: rgba(245,240,232,0.5);
+        transition: border-color 0.25s, background 0.25s;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .hotel-card:active {
+        border-color: var(--autumn-sienna);
+        background: rgba(196,78,10,0.04);
+    }
+    .hotel-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.75rem;
+        font-weight: 400;
+        color: var(--autumn-sienna);
+        line-height: 1;
+    }
+
+    /* ─── Section divider illustration ── */
+    .illus-divider {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        opacity: 0.65;
+    }
+
+    /* ─── Corner ornaments ───────────── */
+    .corner-ornament::before,
+    .corner-ornament::after {
+        content: '';
+        position: absolute;
+        width: 20px; height: 20px;
+    }
+
+    /* ─── Global visibility toggle ───── */
+    .js-hidden { opacity: 0; }
+</style>
+
+{{-- ── Envelope Overlay ─────────────────────────────────────────── --}}
+<audio id="env-audio" src="{{ asset('audi.mp3') }}" preload="auto"></audio>
+
+<div id="envelope-overlay" style="position:fixed;inset:0;z-index:50;background:rgba(245,240,232,0.97);">
+    <div style="position:absolute;inset:-12%;">
+        <img id="env-back" src="{{ asset('img/envelop-removebg-preview.png') }}"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;"
+             alt="" draggable="false">
+        <img id="env-flap" src="{{ asset('img/flap-removebg-preview.png') }}"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform-origin:center top;z-index:10;"
+             alt="" draggable="false">
+        <div id="seal-wrapper"
+             style="position:absolute;left:50%;top:51.5%;transform:translate(-50%,-50%);width:36%;aspect-ratio:1;z-index:20;">
+            <img id="env-seal" src="{{ asset('img/wax-seal-removebg-preview.png') }}"
+                 style="width:100%;height:100%;object-fit:contain;cursor:pointer;display:block;user-select:none;-webkit-user-select:none;touch-action:manipulation;"
+                 alt="Sello de cera" draggable="false">
         </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const overlay = document.getElementById('envelope-overlay');
-            const sealWrapper = document.getElementById('seal-wrapper');
-            const seal = document.getElementById('env-seal');
-            const flap = document.getElementById('env-flap');
-            const audio = document.getElementById('env-audio');
+{{-- ── Main Content ──────────────────────────────────────────────── --}}
+<main id="main-content" style="opacity:0;">
 
-            if (!overlay || !seal || !window.gsap) return;
+    {{-- ── 1. HERO ───────────────────────────────────────────────── --}}
+    <section id="hero" class="relative flex items-end overflow-hidden">
 
-            const gsap = window.gsap;
+        <canvas id="leaves-canvas"></canvas>
 
-            let triggered = false;
+        <img src="{{ asset('img/couple-photo-bw-groom-lifting-bride-spinning.jpg') }}"
+             class="hero-bg" alt="Hannia y Alfonso" loading="eager">
 
-            seal.addEventListener('click', function() {
-                if (triggered) return;
-                triggered = true;
-                overlay.style.pointerEvents = 'none';
+        <div class="hero-gradient"></div>
 
-                // Haptic buzz sincronizado con el inicio de la animación
-                if (window.haptics) {
-                    window.haptics.trigger([{
-                        duration: 1000
-                    }], {
-                        intensity: 1
-                    });
-                }
+        <div class="hero-content w-full text-center px-6 pb-12 sm:pb-16">
 
-                if (audio) {
-                    audio.currentTime = 0;
-                    const p = audio.play();
-                    if (p) p.catch(function() {});
-                }
+            <p class="section-label text-white/50 mb-4 js-hidden" id="hero-label">Celebra con nosotros</p>
 
-                const tl = gsap.timeline();
-
-                // Seal y flap suben juntos fuera de pantalla, luego la invitación aparece
-                tl.to([sealWrapper, flap], {
-                        y: '-120vh',
-                        duration: 2.6,
-                        ease: 'power2.inOut',
-                        stagger: 0.12
-                    })
-                    // Empieza a difuminar al 50% del levantamiento (1.3s dentro de los 2.6s)
-                    .to(overlay, {
-                        opacity: 0,
-                        duration: 1.3,
-                        ease: 'power2.inOut',
-                        onComplete: function() {
-                            overlay.style.display = 'none';
-                        }
-                    }, .8);
-            });
-        });
-    </script>
-    {{-- ── End Envelope Overlay ──────────────────────────────────────────────── --}}
-
-    <div class="min-h-screen relative"
-        style="background: radial-gradient(ellipse at 50% 0%, #ece5d8 0%, var(--ivory) 60%);">
-
-        {{-- Top decorative border --}}
-        <div class="absolute top-0 left-0 right-0 h-px"
-            style="background: linear-gradient(90deg, transparent, var(--parchment) 20%, var(--bronze-light) 50%, var(--parchment) 80%, transparent);">
-        </div>
-
-        {{-- Floating botanical decoration --}}
-        <svg class="absolute top-16 right-6 sm:right-16 w-24 sm:w-32 opacity-[0.06]" viewBox="0 0 200 200" fill="none"
-            stroke="currentColor" stroke-width="0.8"
-            style="color: var(--olive); animation: floatGentle 9s ease-in-out infinite;">
-            <path
-                d="M100 180 C100 180 60 140 60 100 C60 60 100 20 100 20 C100 20 140 60 140 100 C140 140 100 180 100 180Z" />
-            <path d="M100 20 L100 180" />
-            <path d="M72 60 Q100 80 128 60" />
-            <path d="M65 90 Q100 110 135 90" />
-            <path d="M68 120 Q100 140 132 120" />
-        </svg>
-
-        {{-- Header --}}
-        <div class="text-center pt-14 sm:pt-20 pb-6 sm:pb-10 px-6">
-            <p class="font-body text-[10px] sm:text-xs tracking-[0.4em] uppercase anim-fade-up delay-1"
-                style="color: var(--bronze-light);">
-                Celebra con nosotros
-            </p>
-
-            <div class="mx-auto mt-5 mb-6 anim-line delay-2"
-                style="width: 48px; height: 1px; background: var(--bronze-light);"></div>
-
-            <h1 class="font-display text-4xl sm:text-5xl md:text-6xl leading-[0.9] tracking-[-0.02em] anim-fade-up delay-2"
-                style="color: var(--charcoal); font-weight: 400;">
-                Hanni <span class="font-accent italic text-3xl sm:text-4xl md:text-5xl"
-                    style="color: var(--bronze-glow);">&</span> Alfonso
+            <h1 class="hero-names mb-4 js-hidden" id="hero-names">
+                Hannia <span class="hero-amp">&</span> Alfonso
             </h1>
 
-            <div class="flex items-center justify-center gap-4 mt-5 anim-fade-up delay-3">
-                <div style="width: 32px; height: 0.5px; background: var(--parchment);"></div>
-                <p class="font-accent text-base sm:text-lg italic" style="color: var(--olive-light); font-weight: 300;">24
-                    de Octubre, 2026</p>
-                <div style="width: 32px; height: 0.5px; background: var(--parchment);"></div>
+            <div class="js-hidden" id="hero-date">
+                <p class="font-display text-xl sm:text-2xl text-white/75 tracking-[0.25em] font-light">
+                    24 · OCTUBRE · 2026
+                </p>
+                <p class="font-accent italic text-base sm:text-lg mt-1" style="color: rgba(212,136,26,0.8);">
+                    4:30 de la tarde
+                </p>
             </div>
         </div>
 
-        {{-- Personal greeting card --}}
-        <div class="max-w-xl mx-auto px-6 pb-8 sm:pb-10 anim-fade-up delay-3">
-            <div class="relative text-center py-10 px-8"
-                style="background: linear-gradient(135deg, rgba(245,240,232,0.6), rgba(236,229,216,0.4)); border: 1px solid var(--parchment); border-radius: 2px;">
+        <div id="scroll-hint" class="js-hidden absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+             style="z-index:3;">
+            <span class="section-label text-white/30">Desliza</span>
+            <div class="scroll-dot"></div>
+        </div>
+    </section>
+
+    {{-- ── 2. FECHA & CALENDARIO ─────────────────────────────────── --}}
+    <section id="fecha" class="py-20 sm:py-28 px-6 text-center relative overflow-hidden"
+             style="background: var(--ivory);">
+
+        {{-- Background illustration --}}
+        <img src="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}"
+             class="absolute inset-0 w-full h-full object-cover opacity-[0.05] pointer-events-none"
+             style="object-position: center top;" alt="">
+
+        <div class="relative">
+            <p class="section-label mb-6 js-hidden" data-anim>Fecha del evento</p>
+
+            <div class="flex items-center justify-center gap-4 sm:gap-8 mb-2 js-hidden" data-anim>
+                <div class="text-right">
+                    <p class="date-month">Viernes</p>
+                </div>
+                <div class="date-day">24</div>
+                <div class="text-left">
+                    <p class="date-month" style="color: var(--autumn-sienna);">Octubre</p>
+                    <p class="date-year">2026</p>
+                </div>
+            </div>
+
+            <p class="font-accent italic text-2xl sm:text-3xl mt-2 mb-10 js-hidden" data-anim
+               style="color: var(--olive-light);">4:30 de la tarde</p>
+
+            <span class="section-rule mb-10 block js-hidden" data-anim></span>
+
+            <p class="section-label mb-6 js-hidden" data-anim>Agrega a tu calendario</p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center js-hidden" data-anim>
+                <a href="{{ $googleCalUrl }}" target="_blank" rel="noopener" class="cal-btn"
+                   onclick="window.haptics?.trigger('light')">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Google Calendar
+                </a>
+                <a href="{{ route('invitation.calendar', $invitation->magic_link_token) }}" class="cal-btn"
+                   onclick="window.haptics?.trigger('light')">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M8 18h.01"/>
+                    </svg>
+                    Apple / iCal / Outlook
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- ── 3. MENSAJE PERSONAL ───────────────────────────────────── --}}
+    <section class="py-10 px-6" style="background: var(--cream);">
+        <div class="max-w-lg mx-auto">
+            <div class="relative text-center py-10 px-8 js-hidden" data-anim
+                 style="background: linear-gradient(135deg,rgba(245,240,232,0.7),rgba(236,229,216,0.5));
+                        border: 1px solid var(--parchment); border-radius: 2px;">
                 {{-- Corner ornaments --}}
                 <div class="absolute top-3 left-3 w-5 h-5"
-                    style="border-top: 1px solid var(--bronze-light); border-left: 1px solid var(--bronze-light);"></div>
+                     style="border-top:1px solid var(--bronze-light);border-left:1px solid var(--bronze-light);"></div>
                 <div class="absolute top-3 right-3 w-5 h-5"
-                    style="border-top: 1px solid var(--bronze-light); border-right: 1px solid var(--bronze-light);"></div>
+                     style="border-top:1px solid var(--bronze-light);border-right:1px solid var(--bronze-light);"></div>
                 <div class="absolute bottom-3 left-3 w-5 h-5"
-                    style="border-bottom: 1px solid var(--bronze-light); border-left: 1px solid var(--bronze-light);"></div>
+                     style="border-bottom:1px solid var(--bronze-light);border-left:1px solid var(--bronze-light);"></div>
                 <div class="absolute bottom-3 right-3 w-5 h-5"
-                    style="border-bottom: 1px solid var(--bronze-light); border-right: 1px solid var(--bronze-light);">
-                </div>
+                     style="border-bottom:1px solid var(--bronze-light);border-right:1px solid var(--bronze-light);"></div>
 
                 <p class="font-accent text-lg italic" style="color: var(--olive-light);">Querido/a</p>
-                <p class="font-display text-3xl sm:text-4xl mt-2" style="color: var(--charcoal); font-weight: 500;">
-                    {{ $invitation->group_name }}</p>
+                <p class="font-display text-3xl sm:text-4xl mt-2" style="color:var(--charcoal);font-weight:500;">
+                    {{ $invitation->group_name }}
+                </p>
 
                 @if ($invitation->personal_message)
                     <div class="mx-auto mt-6"
-                        style="width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--bronze-light), transparent);">
-                    </div>
-                    <p class="font-accent text-base italic mt-6 leading-relaxed" style="color: var(--olive-light);">
-                        {{ $invitation->personal_message }}</p>
+                         style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--bronze-light),transparent);"></div>
+                    <p class="font-accent text-base italic mt-6 leading-relaxed"
+                       style="color:var(--olive-light);">{{ $invitation->personal_message }}</p>
                 @endif
             </div>
         </div>
+    </section>
 
-        {{-- Event details + Add to Calendar --}}
-        @php
-            $googleCalUrl = 'https://calendar.google.com/calendar/render?' . http_build_query([
-                'action'   => 'TEMPLATE',
-                'text'     => 'Boda Hannia & Alfonso',
-                'dates'    => '20261024T163000/20261024T220000',
-                'ctz'      => 'America/Mexico_City',
-                'location' => 'Carr. Querétaro-Tequisquiapan 707, Purísima de Cubos, 76295 Querétaro, Qro.',
-                'details'  => "¡Los esperamos en nuestra boda!\nMapa: https://maps.app.goo.gl/x1WDacDi6BWHyx9H6",
-            ]);
-        @endphp
-        <div class="max-w-xl mx-auto px-6 pb-10 anim-fade-up delay-4">
-            <div class="relative text-center py-9 px-8"
-                style="background: linear-gradient(135deg, rgba(245,240,232,0.6), rgba(236,229,216,0.4)); border: 1px solid var(--parchment); border-radius: 2px;">
-                {{-- Corner ornaments --}}
-                <div class="absolute top-3 left-3 w-5 h-5"
-                    style="border-top: 1px solid var(--bronze-light); border-left: 1px solid var(--bronze-light);"></div>
-                <div class="absolute top-3 right-3 w-5 h-5"
-                    style="border-top: 1px solid var(--bronze-light); border-right: 1px solid var(--bronze-light);"></div>
-                <div class="absolute bottom-3 left-3 w-5 h-5"
-                    style="border-bottom: 1px solid var(--bronze-light); border-left: 1px solid var(--bronze-light);"></div>
-                <div class="absolute bottom-3 right-3 w-5 h-5"
-                    style="border-bottom: 1px solid var(--bronze-light); border-right: 1px solid var(--bronze-light);"></div>
+    {{-- ── 4. RSVP ───────────────────────────────────────────────── --}}
+    <section id="rsvp" class="relative py-16 sm:py-24 px-0 overflow-hidden" style="background:var(--ivory);">
+        <img src="{{ asset('img/venue-illustration-night-string-lights-reception.jpeg') }}"
+             class="rsvp-bg" alt="">
 
-                {{-- Calendar icon --}}
-                <svg class="mx-auto mb-4 w-7 h-7 opacity-50" viewBox="0 0 24 24" fill="none" stroke="var(--bronze)"
-                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <path d="M16 2v4M8 2v4M3 10h18" />
-                    <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" />
+        <div class="relative" style="z-index:1;">
+            <div class="text-center mb-8 px-6 js-hidden" data-anim>
+                <p class="section-label mb-3">Confirmación de asistencia</p>
+                <span class="section-rule"></span>
+            </div>
+
+            <livewire:public.rsvp-form :invitation="$invitation" />
+        </div>
+    </section>
+
+    {{-- ── 5. UBICACIÓN ──────────────────────────────────────────── --}}
+    <section id="ubicacion" class="relative py-20 sm:py-28 overflow-hidden" style="min-height:480px;">
+
+        <img src="{{ asset('img/venue-illustration-stone-chapel-bell-tower.jpeg') }}"
+             class="venue-illus" alt="Capilla">
+        <div class="venue-overlay"></div>
+
+        <div class="relative px-6 text-center max-w-lg mx-auto" style="z-index:2;">
+            <p class="section-label mb-6 js-hidden" data-anim>Lugar del evento</p>
+
+            <div class="js-hidden" data-anim>
+                <img src="{{ asset('img/venue-illustration-stone-hacienda-tower.jpeg') }}"
+                     class="w-28 h-28 object-cover rounded-full mx-auto mb-6 opacity-80"
+                     style="box-shadow: 0 6px 24px rgba(0,0,0,0.15);" alt="Hacienda">
+            </div>
+
+            <h2 class="font-display text-2xl sm:text-3xl mb-2 js-hidden" data-anim
+                style="color:var(--charcoal);font-weight:400;">
+                Purísima de Cubos
+            </h2>
+
+            <p class="font-accent italic text-lg mb-1 js-hidden" data-anim style="color:var(--olive-light);">
+                Querétaro, México
+            </p>
+
+            <div class="mx-auto my-6 js-hidden" data-anim
+                 style="width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--bronze-light),transparent);"></div>
+
+            <p class="font-body text-sm mb-1 js-hidden" data-anim style="color:var(--olive);">
+                Carr. Querétaro-Tequisquiapan 707
+            </p>
+            <p class="font-body text-sm mb-8 js-hidden" data-anim style="color:var(--olive-light);">
+                Purísima de Cubos, 76295 Qro.
+            </p>
+
+            <a href="https://maps.app.goo.gl/x1WDacDi6BWHyx9H6" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 px-8 py-4 font-body text-xs tracking-[0.25em] uppercase
+                      transition-all duration-300 js-hidden" data-anim
+               style="background:var(--charcoal);color:var(--cream);border-radius:2px;text-decoration:none;min-height:48px;"
+               onclick="window.haptics?.trigger('light')">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z"/>
+                    <circle cx="12" cy="9" r="2.5"/>
                 </svg>
+                Cómo llegar
+            </a>
+        </div>
+    </section>
 
-                <p class="font-body text-[10px] tracking-[0.35em] uppercase mb-4"
-                    style="color: var(--bronze-light);">Detalles del Evento</p>
+    {{-- Illustration divider --}}
+    <img src="{{ asset('img/venue-illustration-night-string-lights-reception.jpeg') }}"
+         class="illus-divider" alt="" aria-hidden="true">
 
-                <p class="font-display text-2xl sm:text-3xl mb-1"
-                    style="color: var(--charcoal); font-weight: 400;">Viernes 24 de Octubre</p>
-                <p class="font-accent text-lg italic mb-6" style="color: var(--olive-light);">4:30 pm</p>
+    {{-- ── 6. MOMENTOS — FOTOS ARRASTRABLES ──────────────────────── --}}
+    <section id="fotos" class="py-16 sm:py-24 px-6 overflow-hidden" style="background:var(--cream);">
+        <div class="text-center mb-12">
+            <p class="section-label mb-3 js-hidden" data-anim>Momentos juntos</p>
+            <span class="section-rule block mb-4 js-hidden" data-anim></span>
+            <h2 class="font-display text-2xl sm:text-3xl js-hidden" data-anim
+                style="color:var(--charcoal);font-weight:400;">Nuestros recuerdos</h2>
+        </div>
 
-                <div class="mx-auto mb-6"
-                    style="width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--bronze-light), transparent);">
+        {{-- Photo pile --}}
+        <div id="photo-zone" class="relative">
+            <div id="photo-scatter" class="photo-scatter js-hidden" data-anim-photos>
+
+                {{-- Envelope (decorative background) --}}
+                <img src="{{ asset('img/envelope-back.svg') }}"
+                     class="envelope-visual" alt="" aria-hidden="true">
+
+                @php
+                $photoPositions = [
+                    ['top'=>'20px',  'left'=>'50%',  'ml'=>'-100px', 'rot'=>'-3deg',  'z'=>7],
+                    ['top'=>'15px',  'left'=>'55%',  'ml'=>'-90px',  'rot'=>'9deg',   'z'=>6],
+                    ['top'=>'35px',  'left'=>'42%',  'ml'=>'-80px',  'rot'=>'-13deg', 'z'=>5],
+                    ['top'=>'55px',  'left'=>'50%',  'ml'=>'-105px', 'rot'=>'5deg',   'z'=>4],
+                    ['top'=>'25px',  'left'=>'38%',  'ml'=>'-70px',  'rot'=>'-8deg',  'z'=>3],
+                    ['top'=>'50px',  'left'=>'58%',  'ml'=>'-100px', 'rot'=>'14deg',  'z'=>2],
+                    ['top'=>'40px',  'left'=>'45%',  'ml'=>'-95px',  'rot'=>'-6deg',  'z'=>1],
+                ];
+                @endphp
+
+                @foreach ($couplePhotos as $idx => $photo)
+                @php $pos = $photoPositions[$idx]; @endphp
+                <div class="polaroid"
+                     style="top:{{ $pos['top'] }};left:{{ $pos['left'] }};margin-left:{{ $pos['ml'] }};
+                            transform:rotate({{ $pos['rot'] }});z-index:{{ $pos['z'] }};">
+                    <img src="{{ asset('img/' . $photo) }}" alt="Hannia y Alfonso">
                 </div>
+                @endforeach
 
-                <a href="https://maps.app.goo.gl/x1WDacDi6BWHyx9H6" target="_blank" rel="noopener"
-                    class="inline-flex items-center gap-2 font-body text-xs mb-1"
-                    style="color: var(--olive);">
-                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z" />
-                        <circle cx="12" cy="9" r="2.5" />
+            </div>
+
+            <p class="drag-hint mt-4">
+                <svg class="inline-block w-3.5 h-3.5 mr-1 -mt-0.5" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 11V6a2 2 0 0 0-4 0v5"/>
+                    <path d="M14 10V4a2 2 0 0 0-4 0v2"/>
+                    <path d="M10 10.5V6a2 2 0 0 0-4 0v8"/>
+                    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+                </svg>
+                Arrastra las fotos para explorarlas
+            </p>
+        </div>
+    </section>
+
+    {{-- ── 7. CÓDIGO DE VESTIMENTA ───────────────────────────────── --}}
+    <section id="vestimenta" class="py-16 sm:py-24 px-6 text-center" style="background:var(--ivory);">
+        <div class="max-w-lg mx-auto">
+
+            <p class="section-label mb-3 js-hidden" data-anim>Para ese día especial</p>
+            <span class="section-rule block mb-6 js-hidden" data-anim></span>
+            <h2 class="font-display text-2xl sm:text-3xl mb-4 js-hidden" data-anim
+                style="color:var(--charcoal);font-weight:400;">Código de Vestimenta</h2>
+            <p class="font-accent italic text-lg mb-10 js-hidden" data-anim
+               style="color:var(--olive-light);">Paleta otoñal · Octubre 2026</p>
+
+            {{-- Swatches --}}
+            <div class="flex justify-center gap-4 sm:gap-6 mb-10 js-hidden" id="swatches-row" data-anim-swatches>
+                <div>
+                    <div class="swatch mx-auto" style="background:#7B1B1B;"></div>
+                    <p class="swatch-label">Borgoña</p>
+                </div>
+                <div>
+                    <div class="swatch mx-auto" style="background:#E8A820;"></div>
+                    <p class="swatch-label">Dorado</p>
+                </div>
+                <div>
+                    <div class="swatch mx-auto" style="background:#1C5C3A;"></div>
+                    <p class="swatch-label">Verde</p>
+                </div>
+                <div>
+                    <div class="swatch mx-auto" style="background:#C44E0A;"></div>
+                    <p class="swatch-label">Terracota</p>
+                </div>
+                <div>
+                    <div class="swatch mx-auto" style="background:#9B6A18;"></div>
+                    <p class="swatch-label">Caramelo</p>
+                </div>
+            </div>
+
+            {{-- Men & Women --}}
+            <div class="grid grid-cols-2 gap-4 mb-8 text-left js-hidden" data-anim>
+                <div class="p-5" style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
+                    <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2"
+                       style="color:var(--bronze-light);">Ellas</p>
+                    <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
+                        Vestido elegante en la paleta otoñal
+                    </p>
+                </div>
+                <div class="p-5" style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
+                    <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2"
+                       style="color:var(--bronze-light);">Ellos</p>
+                    <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
+                        Traje formal, sin restricción de color
+                    </p>
+                </div>
+            </div>
+
+            {{-- Important warning --}}
+            <div class="dress-warning text-left py-4 js-hidden" data-anim>
+                <p class="font-body text-[9px] tracking-[0.25em] uppercase mb-1"
+                   style="color:var(--autumn-sienna);">Nota importante</p>
+                <p class="font-body text-sm leading-relaxed" style="color:var(--charcoal);">
+                    Los vestidos no pueden tener lentejuelas ni bordados.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    {{-- Illustration divider --}}
+    <img src="{{ asset('img/couple-illustration-floral-arch-wide.png') }}"
+         class="illus-divider" style="height:220px;opacity:0.55;object-position:center 20%;" alt="" aria-hidden="true">
+
+    {{-- ── 8. HOSPEDAJE ──────────────────────────────────────────── --}}
+    <section id="hoteles" class="py-16 sm:py-24 px-6" style="background:var(--cream);">
+        <div class="max-w-lg mx-auto">
+
+            <div class="text-center mb-10">
+                <p class="section-label mb-3 js-hidden" data-anim>Para tu comodidad</p>
+                <span class="section-rule block mb-4 js-hidden" data-anim></span>
+                <h2 class="font-display text-2xl sm:text-3xl mb-2 js-hidden" data-anim
+                    style="color:var(--charcoal);font-weight:400;">Hospedaje cercano</h2>
+                <p class="font-accent italic js-hidden" data-anim style="color:var(--olive-light);">
+                    Te recomendamos reservar con anticipación
+                </p>
+            </div>
+
+            {{-- Featured: Facebook video tour --}}
+            <a href="https://www.facebook.com/share/v/1Dy5sCeEJN/" target="_blank" rel="noopener"
+               class="flex items-center gap-4 p-5 mb-6 js-hidden" data-anim
+               style="border:1px solid var(--autumn-amber);border-radius:2px;
+                      background:rgba(212,136,26,0.05);text-decoration:none;"
+               onclick="window.haptics?.trigger('light')">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+                     style="background:rgba(212,136,26,0.15);">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                         style="color:var(--autumn-amber);">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
-                    Carr. Querétaro-Tequisquiapan 707
-                </a>
-                <p class="font-body text-[11px] mb-8" style="color: var(--olive-light);">
-                    Purísima de Cubos, 76295 Querétaro, Qro.</p>
-
-                {{-- Calendar buttons --}}
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="{{ $googleCalUrl }}" target="_blank" rel="noopener"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-3 font-body text-[11px] tracking-[0.2em] uppercase transition-all duration-300"
-                        style="border: 1px solid var(--parchment); border-radius: 2px; color: var(--olive-light); background: transparent;"
-                        onmouseover="this.style.borderColor='var(--sage)'; this.style.color='var(--olive)'"
-                        onmouseout="this.style.borderColor='var(--parchment)'; this.style.color='var(--olive-light)'">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        </svg>
-                        Google Calendar
-                    </a>
-                    <a href="{{ route('invitation.calendar', $invitation->magic_link_token) }}"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-3 font-body text-[11px] tracking-[0.2em] uppercase transition-all duration-300"
-                        style="border: 1px solid var(--parchment); border-radius: 2px; color: var(--olive-light); background: transparent;"
-                        onmouseover="this.style.borderColor='var(--sage)'; this.style.color='var(--olive)'"
-                        onmouseout="this.style.borderColor='var(--parchment)'; this.style.color='var(--olive-light)'">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" />
-                            <path d="M16 2v4M8 2v4M3 10h18" />
-                            <path d="M8 14h.01M12 14h.01M8 18h.01" />
-                        </svg>
-                        Apple / iCal / Outlook
-                    </a>
                 </div>
-            </div>
-        </div>
-
-        {{-- RSVP Form --}}
-        <div class="max-w-xl mx-auto px-6 pb-20 anim-fade-up delay-4">
-            <div class="relative"
-                style="background: rgba(245,240,232,0.5); border: 1px solid var(--parchment); border-radius: 2px; padding: 2.5rem 2rem;">
-
-                <h2 class="font-display text-2xl sm:text-3xl text-center tracking-[-0.01em] mb-2"
-                    style="color: var(--charcoal); font-weight: 400;">Confirma tu Asistencia</h2>
-                <div class="mx-auto mb-8"
-                    style="width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--bronze-light), transparent);">
+                <div>
+                    <p class="font-body text-[9px] tracking-[0.2em] uppercase mb-0.5"
+                       style="color:var(--autumn-amber);">Video tour</p>
+                    <p class="font-display text-base" style="color:var(--charcoal);font-weight:400;">
+                        Conoce el área del evento
+                    </p>
                 </div>
-
-                @if ($invitation->status !== 'pending')
-                    <div class="text-center py-6 mb-6"
-                        style="background: {{ $invitation->status === 'confirmed' ? 'rgba(138,154,123,0.08)' : 'rgba(149,123,90,0.08)' }}; border: 1px solid {{ $invitation->status === 'confirmed' ? 'var(--sage)' : 'var(--bronze-light)' }}; border-radius: 2px;">
-                        <div class="inline-flex items-center gap-2 mb-3">
-                            @if ($invitation->status === 'confirmed')
-                                <svg class="w-5 h-5" fill="none" stroke="var(--sage)" stroke-width="1.5"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span class="font-body text-sm font-medium tracking-wide uppercase"
-                                    style="color: var(--olive);">Asistencia Confirmada</span>
-                            @else
-                                <span class="font-body text-sm font-medium tracking-wide uppercase"
-                                    style="color: var(--bronze);">No podrás asistir</span>
-                            @endif
-                        </div>
-                        <p class="font-body text-xs px-6" style="color: var(--olive-light);">Ya has respondido a esta
-                            invitación. Si necesitas cambiar tu respuesta, completa el formulario nuevamente.</p>
-                    </div>
-                @endif
-
-                <form action="{{ route('rsvp.store') }}" method="POST" id="rsvp-form">
-                    @csrf
-                    <input type="hidden" name="invitation_id" value="{{ $invitation->id }}">
-
-                    {{-- Attending toggle --}}
-                    <div class="mb-10">
-                        <label class="block font-body text-xs tracking-[0.2em] uppercase mb-4"
-                            style="color: var(--bronze);">¿Podrás acompañarnos?</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="relative cursor-pointer group">
-                                <input type="radio" name="attending" value="1" class="peer sr-only" required
-                                    {{ old('attending') == '1' ? 'checked' : '' }}>
-                                <div class="flex items-center justify-center gap-2 py-3.5 px-4 transition-all duration-300"
-                                    style="border: 1px solid var(--parchment); border-radius: 2px; color: var(--olive-light);"
-                                    onmouseover="this.style.borderColor='var(--sage)'"
-                                    onmouseout="if(!this.previousElementSibling.checked) this.style.borderColor='var(--parchment)'">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="font-body text-sm font-medium">Sí, asistiré</span>
-                                </div>
-                            </label>
-                            <label class="relative cursor-pointer group">
-                                <input type="radio" name="attending" value="0" class="peer sr-only"
-                                    {{ old('attending') == '0' ? 'checked' : '' }}>
-                                <div class="flex items-center justify-center gap-2 py-3.5 px-4 transition-all duration-300"
-                                    style="border: 1px solid var(--parchment); border-radius: 2px; color: var(--olive-light);"
-                                    onmouseover="this.style.borderColor='var(--bronze-light)'"
-                                    onmouseout="if(!this.previousElementSibling.checked) this.style.borderColor='var(--parchment)'">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                    <span class="font-body text-sm font-medium">No podré</span>
-                                </div>
-                            </label>
-                        </div>
-                        @error('attending')
-                            <p class="font-body text-xs mt-2" style="color: #a0522d;">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Guest details --}}
-                    <div class="space-y-6" id="guests-section">
-                        <div class="flex items-center gap-4">
-                            <div class="grow" style="height: 1px; background: var(--parchment);"></div>
-                            <h3 class="font-body text-[10px] tracking-[0.3em] uppercase shrink-0"
-                                style="color: var(--bronze);">Invitados — {{ $invitation->max_guests }}
-                                {{ $invitation->max_guests > 1 ? 'lugares' : 'lugar' }}</h3>
-                            <div class="grow" style="height: 1px; background: var(--parchment);"></div>
-                        </div>
-
-                        @foreach ($invitation->guests as $index => $guest)
-                            <div class="p-5 space-y-4"
-                                style="background: rgba(236,229,216,0.3); border: 1px solid rgba(227,218,206,0.6); border-radius: 2px;">
-                                <input type="hidden" name="guests[{{ $index }}][id]"
-                                    value="{{ $guest->id }}">
-
-                                <div>
-                                    <label class="block font-body text-[10px] tracking-[0.2em] uppercase mb-2"
-                                        style="color: var(--bronze-light);">Nombre</label>
-                                    <input type="text" name="guests[{{ $index }}][name]"
-                                        value="{{ old("guests.{$index}.name", $guest->name) }}" class="wedding-input"
-                                        placeholder="Nombre completo">
-                                </div>
-
-                                <div class="flex items-center gap-6">
-                                    <label class="font-body text-[10px] tracking-[0.2em] uppercase"
-                                        style="color: var(--bronze-light);">¿Asistirá?</label>
-                                    <div class="flex items-center gap-4">
-                                        <label class="flex items-center gap-1.5 cursor-pointer">
-                                            <input type="radio" name="guests[{{ $index }}][attending]"
-                                                value="1"
-                                                class="w-3.5 h-3.5 border-2 appearance-none rounded-full checked:border-4 transition-all"
-                                                style="border-color: var(--parchment); --tw-ring-color: transparent;"
-                                                {{ old("guests.{$index}.attending", $guest->attending) == '1' ? 'checked' : '' }}>
-                                            <span class="font-body text-sm" style="color: var(--charcoal-soft);">Sí</span>
-                                        </label>
-                                        <label class="flex items-center gap-1.5 cursor-pointer">
-                                            <input type="radio" name="guests[{{ $index }}][attending]"
-                                                value="0"
-                                                class="w-3.5 h-3.5 border-2 appearance-none rounded-full checked:border-4 transition-all"
-                                                style="border-color: var(--parchment); --tw-ring-color: transparent;"
-                                                {{ old("guests.{$index}.attending") == '0' || (old("guests.{$index}.attending") === null && $guest->attending === false) ? 'checked' : '' }}>
-                                            <span class="font-body text-sm" style="color: var(--charcoal-soft);">No</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block font-body text-[10px] tracking-[0.2em] uppercase mb-2"
-                                        style="color: var(--bronze-light);">Restricciones alimentarias</label>
-                                    <input type="text" name="guests[{{ $index }}][dietary_restrictions]"
-                                        value="{{ old("guests.{$index}.dietary_restrictions", $guest->dietary_restrictions) }}"
-                                        class="wedding-input" placeholder="Alergias, vegetariano, etc.">
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    @if ($errors->any())
-                        <div class="mt-6 p-4"
-                            style="background: rgba(160,82,45,0.05); border: 1px solid rgba(160,82,45,0.2); border-radius: 2px;">
-                            <ul class="font-body text-xs space-y-1" style="color: #a0522d;">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <button type="submit"
-                        class="mt-10 w-full font-body text-xs tracking-[0.3em] uppercase py-4 transition-all duration-300"
-                        style="background: var(--charcoal); color: var(--cream); border: none; border-radius: 2px; letter-spacing: 0.3em;"
-                        onmouseover="this.style.background='var(--charcoal-soft)'"
-                        onmouseout="this.style.background='var(--charcoal)'">
-                        Enviar Confirmación
-                    </button>
-                </form>
-            </div>
-
-            {{-- Bottom flourish --}}
-            <div class="mt-12 text-center anim-fade-in delay-6">
-                <svg class="mx-auto w-10 h-10 opacity-20" viewBox="0 0 48 48" fill="none" stroke="var(--bronze)"
-                    stroke-width="0.5">
-                    <path d="M24 4 C24 4 10 16 10 26 C10 34 16 40 24 44 C32 40 38 34 38 26 C38 16 24 4 24 4Z" />
-                    <path d="M24 12 L24 36" />
-                    <path d="M17 22 Q24 28 31 22" />
-                    <path d="M18 30 Q24 35 30 30" />
+                <svg class="w-4 h-4 ml-auto shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                     style="color:var(--bronze-light);">
+                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
                 </svg>
+            </a>
+
+            {{-- Hotel grid --}}
+            <div class="grid grid-cols-2 gap-3 js-hidden" id="hotels-grid" data-anim-hotels>
+                @foreach ($hotels as $i => $hotel)
+                <a href="{{ $hotel['url'] }}" target="_blank" rel="noopener"
+                   class="hotel-card" onclick="window.haptics?.trigger('light')">
+                    <span class="hotel-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                    <div>
+                        <p class="font-body text-[9px] tracking-[0.2em] uppercase mb-0.5"
+                           style="color:var(--bronze-light);">Opción {{ $i + 1 }}</p>
+                        <p class="inline-flex items-center gap-1 font-body text-xs"
+                           style="color:var(--olive);">
+                            Ver en mapa
+                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                            </svg>
+                        </p>
+                    </div>
+                </a>
+                @endforeach
             </div>
+
         </div>
+    </section>
 
-        {{-- Bottom decorative border --}}
-        <div class="absolute bottom-0 left-0 right-0 h-px"
-            style="background: linear-gradient(90deg, transparent, var(--parchment) 20%, var(--bronze-light) 50%, var(--parchment) 80%, transparent);">
+    {{-- ── 9. FOOTER ─────────────────────────────────────────────── --}}
+    <footer class="relative py-20 px-6 text-center overflow-hidden"
+            style="background:var(--charcoal);">
+
+        <img src="{{ asset('img/couple-illustration-floral-arch-tall.png') }}"
+             class="absolute inset-0 w-full h-full object-cover opacity-[0.07] pointer-events-none"
+             style="object-position:center top;" alt="">
+
+        <div class="relative">
+            <p class="section-label mb-6 js-hidden" data-anim style="color:rgba(255,255,255,0.35);">
+                Con todo nuestro amor
+            </p>
+
+            <h2 class="font-script js-hidden" data-anim
+                style="font-size:clamp(2.5rem,12vw,5rem);color:#fff;line-height:1;">
+                Hannia <span style="color:var(--autumn-amber);">&</span> Alfonso
+            </h2>
+
+            <div class="mx-auto my-6 js-hidden" data-anim
+                 style="width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);"></div>
+
+            <p class="font-accent italic text-lg js-hidden" data-anim
+               style="color:rgba(255,255,255,0.45);">24 de Octubre, 2026</p>
+
+            <p class="font-body text-xs mt-8 js-hidden" data-anim
+               style="color:rgba(255,255,255,0.2);letter-spacing:0.15em;text-transform:uppercase;">
+                Purísima de Cubos · Querétaro · México
+            </p>
         </div>
-    </div>
+    </footer>
 
-    <style>
-        input[type="radio"].peer:checked+div {
-            border-color: var(--olive) !important;
-            background: rgba(138, 154, 123, 0.06);
-            color: var(--olive);
-        }
+</main>
 
-        input[type="radio"][value="0"].peer:checked+div {
-            border-color: var(--bronze) !important;
-            background: rgba(149, 123, 90, 0.06);
-            color: var(--bronze);
-        }
+{{-- ── Scripts ──────────────────────────────────────────────────── --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-        input[type="radio"].appearance-none:checked {
-            border-color: var(--olive) !important;
-        }
-    </style>
+    // ─── 1. Lenis smooth scroll ───────────────────────────────────
+    const lenis = new window.Lenis({ lerp: 0.09, smoothWheel: true });
+    const { ScrollTrigger, Draggable, gsap } = window;
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
-                radio.addEventListener('change', function() {
-                    window.haptics?.trigger('selection');
-                });
-            });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
 
-            document.getElementById('rsvp-form').addEventListener('submit', function() {
-                window.haptics?.trigger('medium');
-            });
+    // ─── 2. Envelope → reveal ────────────────────────────────────
+    const overlay   = document.getElementById('envelope-overlay');
+    const sealWrap  = document.getElementById('seal-wrapper');
+    const seal      = document.getElementById('env-seal');
+    const flap      = document.getElementById('env-flap');
+    const audio     = document.getElementById('env-audio');
+    const mainEl    = document.getElementById('main-content');
 
-            @if ($errors->any())
-                window.haptics?.trigger('error');
-            @endif
+    function revealMain () {
+        gsap.to(mainEl, { opacity: 1, duration: 0.6, ease: 'power2.out',
+            onComplete: function () { initHeroAnims(); initScrollAnims(); initPhotos(); }
         });
-    </script>
+    }
+
+    if (!overlay || !seal || !gsap) { revealMain(); return; }
+
+    let triggered = false;
+    seal.addEventListener('click', function () {
+        if (triggered) return;
+        triggered = true;
+        overlay.style.pointerEvents = 'none';
+        window.haptics?.trigger([{duration: 1000}], {intensity: 1});
+        if (audio) { audio.currentTime = 0; const p = audio.play(); if (p) p.catch(function(){}); }
+
+        const tl = gsap.timeline();
+        tl.to([sealWrap, flap], { y: '-120vh', duration: 2.6, ease: 'power2.inOut', stagger: 0.12 })
+          .to(overlay, { opacity: 0, duration: 1.3, ease: 'power2.inOut',
+              onComplete: function () {
+                  overlay.style.display = 'none';
+                  revealMain();
+              }
+          }, 0.8);
+    });
+
+    // ─── 3. Hero entrance animations ─────────────────────────────
+    function initHeroAnims () {
+        gsap.to('#hero-label', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.1,
+            from: { opacity: 0, y: 20 } });
+        gsap.fromTo('#hero-label',  { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease:'power3.out', delay:0.1 });
+        gsap.fromTo('#hero-names',  { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 1.1, ease:'power3.out', delay:0.35 });
+        gsap.fromTo('#hero-date',   { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, ease:'power3.out', delay:0.65 });
+        gsap.fromTo('#scroll-hint', { opacity: 0 },        { opacity: 1, duration: 0.8, delay: 1.2 });
+        initLeaves();
+    }
+
+    // ─── 4. Scroll-triggered animations ──────────────────────────
+    function initScrollAnims () {
+        // Generic fade-up
+        document.querySelectorAll('[data-anim]').forEach(function (el) {
+            gsap.fromTo(el,
+                { opacity: 0, y: 36 },
+                { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out',
+                  scrollTrigger: { trigger: el, start: 'top 88%', once: true } }
+            );
+        });
+
+        // Swatches stagger
+        const swatchRow = document.getElementById('swatches-row');
+        if (swatchRow) {
+            gsap.fromTo(swatchRow.children,
+                { opacity: 0, scale: 0.6, y: 20 },
+                { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)', stagger: 0.07,
+                  scrollTrigger: { trigger: swatchRow, start: 'top 85%', once: true } }
+            );
+        }
+
+        // Hotel cards stagger
+        const hotelsGrid = document.getElementById('hotels-grid');
+        if (hotelsGrid) {
+            gsap.fromTo(Array.from(hotelsGrid.children),
+                { opacity: 0, y: 24 },
+                { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', stagger: 0.06,
+                  scrollTrigger: { trigger: hotelsGrid, start: 'top 85%', once: true } }
+            );
+        }
+
+        // Hero photo parallax
+        ScrollTrigger.create({
+            trigger: '#hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+            onUpdate: function (self) {
+                const bg = document.querySelector('.hero-bg');
+                if (bg) gsap.set(bg, { y: self.progress * 80 });
+            }
+        });
+    }
+
+    // ─── 5. Three.js falling leaves ──────────────────────────────
+    function initLeaves () {
+        const canvas  = document.getElementById('leaves-canvas');
+        const heroEl  = document.getElementById('hero');
+        const THREE   = window.THREE;
+        if (!canvas || !heroEl || !THREE) return;
+
+        const W = heroEl.offsetWidth;
+        const H = heroEl.offsetHeight;
+        canvas.width  = W;
+        canvas.height = H;
+
+        const scene    = new THREE.Scene();
+        const camera   = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0, 100);
+        camera.position.z = 10;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false });
+        renderer.setSize(W, H);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.setClearColor(0x000000, 0);
+
+        const COUNT  = W < 768 ? 28 : 55;
+        const COLORS = [0xC44E0A, 0xD4881A, 0x7B1B1B, 0xE8A820, 0x9B6A18, 0xB33A00, 0xE05020];
+
+        // Leaf shape (elliptical petal)
+        const shape = new THREE.Shape();
+        shape.moveTo(0, 4.5);
+        shape.bezierCurveTo( 2.8,  2.8,  2.8, -2.8,  0, -4.5);
+        shape.bezierCurveTo(-2.8, -2.8, -2.8,  2.8,  0,  4.5);
+
+        const geo = new THREE.ShapeGeometry(shape);
+
+        const leaves = [];
+        for (let i = 0; i < COUNT; i++) {
+            const mat = new THREE.MeshBasicMaterial({
+                color:       COLORS[i % COLORS.length],
+                transparent: true,
+                opacity:     0.28 + Math.random() * 0.38,
+                side:        THREE.DoubleSide,
+            });
+            const leaf  = new THREE.Mesh(geo, mat);
+            const scale = 1.2 + Math.random() * 1.8;
+            leaf.scale.set(scale, scale, 1);
+            leaf.position.set(
+                (Math.random() - 0.5) * W * 1.3,
+                H / 2 + Math.random() * H,
+                0
+            );
+            leaf.rotation.z = Math.random() * Math.PI * 2;
+            scene.add(leaf);
+            leaves.push({
+                mesh:       leaf,
+                vy:         0.35 + Math.random() * 0.6,
+                vx:         (Math.random() - 0.5) * 0.25,
+                vr:         (Math.random() - 0.5) * 0.022,
+                phase:      Math.random() * Math.PI * 2,
+                phaseSpeed: 0.013 + Math.random() * 0.018,
+            });
+        }
+
+        let active = true;
+        function animate () {
+            if (!active) return;
+            requestAnimationFrame(animate);
+            leaves.forEach(function (l) {
+                l.phase += l.phaseSpeed;
+                l.mesh.position.y -= l.vy;
+                l.mesh.position.x += l.vx + Math.sin(l.phase) * 0.55;
+                l.mesh.rotation.z += l.vr;
+                if (l.mesh.position.y < -H / 2 - 30) {
+                    l.mesh.position.y = H / 2 + 30;
+                    l.mesh.position.x = (Math.random() - 0.5) * W;
+                }
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        const obs = new IntersectionObserver(function (entries) {
+            active = entries[0].isIntersecting;
+            if (active) animate();
+        }, { threshold: 0 });
+        obs.observe(heroEl);
+    }
+
+    // ─── 6. Draggable Polaroid photos ────────────────────────────
+    function initPhotos () {
+        const scatter = document.getElementById('photo-scatter');
+        if (!scatter || !Draggable) return;
+
+        const cards = Array.from(scatter.querySelectorAll('.polaroid'));
+
+        // Animate in from center
+        gsap.fromTo(cards,
+            { opacity: 0, scale: 0.4, y: -60, rotation: 0 },
+            {
+                opacity:  1, scale: 1, y: 0,
+                duration: 0.55, ease: 'back.out(1.5)',
+                stagger:  { each: 0.08, from: 'center' },
+                scrollTrigger: { trigger: scatter, start: 'top 80%', once: true },
+                onComplete: function () { enableDrag(cards); }
+            }
+        );
+    }
+
+    function enableDrag (cards) {
+        cards.forEach(function (card, idx) {
+            Draggable.create(card, {
+                type:           'x,y',
+                bounds:         window,
+                edgeResistance: 0.55,
+                onPress: function () {
+                    window.haptics?.trigger('medium');
+                    card.classList.add('lifted');
+                    gsap.to(card, { scale: 1.06, duration: 0.18, ease: 'power2.out' });
+                    gsap.set(card, { zIndex: 200 + idx });
+                },
+                onRelease: function () {
+                    window.haptics?.trigger('light');
+                    card.classList.remove('lifted');
+                    gsap.to(card, { scale: 1, duration: 0.22, ease: 'power2.out' });
+                },
+            });
+        });
+    }
+
+    // ─── 7. Haptics on interactive elements ──────────────────────
+    document.addEventListener('change', function (e) {
+        if (e.target.type === 'radio') window.haptics?.trigger('selection');
+    });
+
+    // ─── Livewire haptics bridge ──────────────────────────────────
+    document.addEventListener('livewire:initialized', function () {
+        Livewire.on('haptic', function (data) {
+            const type = Array.isArray(data) ? data[0]?.type : data?.type;
+            if (type) window.haptics?.trigger(type);
+        });
+    });
+
+});
+</script>
+
 @endsection
