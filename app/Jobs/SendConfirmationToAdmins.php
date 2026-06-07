@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\ConfirmationToAdminMail;
-use App\Models\Admin;
+use App\Models\User;
 use App\Models\Invitation;
 use App\Models\NotificationLog;
 use Illuminate\Bus\Queueable;
@@ -23,7 +23,7 @@ class SendConfirmationToAdmins implements ShouldQueue
 
     public function handle(): void
     {
-        $admins = Admin::all();
+        $admins = User::where('is_admin', true)->get();
 
         foreach ($admins as $admin) {
             $log = NotificationLog::create([
