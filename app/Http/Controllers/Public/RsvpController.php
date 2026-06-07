@@ -40,7 +40,7 @@ class RsvpController extends Controller
                 ]);
             }
 
-            SendConfirmationToAdmins::dispatch($invitation);
+            SendConfirmationToAdmins::dispatchSync($invitation);
         });
 
         return redirect()->route('rsvp.success');

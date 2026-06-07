@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
+use Resend\Laravel\Facades\Resend;
 
 class SendInvitationEmail implements ShouldQueue
 {
@@ -31,7 +31,12 @@ class SendInvitationEmail implements ShouldQueue
         ]);
 
         try {
-            Mail::to($this->invitation->email)->send(new InvitationMail($this->invitation));
+            Resend::emails()->send([
+                'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
+                'to' => [$this->invitation->email],
+                'subject' => 'Estás Invitado a Nuestra Boda',
+                'html' => (new InvitationMail($this->invitation))->render(),
+            ]);
             $log->markAsSent();
         } catch (\Exception $e) {
             $log->markAsFailed($e->getMessage());

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
+use Resend\Laravel\Facades\Resend;
 
 class SendReminderEmail implements ShouldQueue
 {
@@ -32,7 +32,12 @@ class SendReminderEmail implements ShouldQueue
         ]);
 
         try {
-            Mail::to($this->invitation->email)->send(new ReminderMail($this->invitation, $this->reminderType));
+            Resend::emails()->send([
+                'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
+                'to' => [$this->invitation->email],
+                'subject' => 'Recordatorio: Confirmación de Asistencia',
+                'html' => (new ReminderMail($this->invitation, $this->reminderType))->render(),
+            ]);
             $log->markAsSent();
 
             if ($this->reminderType === 'reminder_1') {

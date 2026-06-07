@@ -31,20 +31,10 @@
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
-        @if (session('success'))
-            <div class="mb-6 rounded-lg bg-green-50 border border-green-200 p-4 text-green-800 text-sm">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 text-red-800 text-sm">
-                {{ session('error') }}
-            </div>
-        @endif
-
         @yield('content')
     </main>
+
+    <x-ui.toast />
 
     @livewireScripts
 </body>

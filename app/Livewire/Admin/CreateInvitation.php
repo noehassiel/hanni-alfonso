@@ -11,11 +11,17 @@ use Livewire\Component;
 class CreateInvitation extends Component
 {
     public $group_name = '';
+
     public $email = '';
+
     public $phone = '';
+
     public $max_guests = 1;
+
     public $personal_message = '';
+
     public $guests = [];
+
     public $send_immediately = false;
 
     public function mount()
@@ -77,13 +83,13 @@ class CreateInvitation extends Component
         }
 
         if ($this->send_immediately && $this->email) {
-            SendInvitationEmail::dispatch($invitation);
+            SendInvitationEmail::dispatchSync($invitation);
             $invitation->update(['invitation_sent_at' => now()]);
         }
 
-        session()->flash('success', 'Invitación creada exitosamente!');
+        session()->flash('notify', ['type' => 'success', 'content' => 'Invitación creada exitosamente!']);
 
-        return redirect()->to(route('admin.dashboard') . '?view=detail&id=' . $invitation->id);
+        return redirect()->to(route('admin.dashboard').'?view=detail&id='.$invitation->id);
     }
 
     public function render()

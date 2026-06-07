@@ -3,15 +3,15 @@
 namespace App\Jobs;
 
 use App\Mail\ConfirmationToAdminMail;
-use App\Models\User;
 use App\Models\Invitation;
 use App\Models\NotificationLog;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
+use Resend\Laravel\Facades\Resend;
 
 class SendConfirmationToAdmins implements ShouldQueue
 {
@@ -35,7 +35,12 @@ class SendConfirmationToAdmins implements ShouldQueue
             ]);
 
             try {
-                Mail::to($admin->email)->send(new ConfirmationToAdminMail($this->invitation));
+                Resend::emails()->send([
+                    'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
+                    'to' => [$admin->email],
+                    'subject' => 'Nueva Confirmación de Asistencia',
+                    'html' => (new ConfirmationToAdminMail($this->invitation))->render(),
+                ]);
                 $log->markAsSent();
             } catch (\Exception $e) {
                 $log->markAsFailed($e->getMessage());

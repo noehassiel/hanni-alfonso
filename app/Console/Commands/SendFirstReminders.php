@@ -17,7 +17,7 @@ class SendFirstReminders extends Command
 
         foreach ($invitations as $invitation) {
             if ($invitation->email) {
-                SendReminderEmail::dispatch($invitation, 'reminder_1');
+                SendReminderEmail::dispatchSync($invitation, 'reminder_1');
                 $this->info("First reminder queued for: {$invitation->group_name}");
             }
         }

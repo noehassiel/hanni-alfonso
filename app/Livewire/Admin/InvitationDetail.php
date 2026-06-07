@@ -17,15 +17,16 @@ class InvitationDetail extends Component
 
     public function sendInvitation()
     {
-        if (!$this->invitation->email) {
-            session()->flash('error', 'No email address provided for this invitation.');
+        if (! $this->invitation->email) {
+            $this->dispatch('notify', type: 'error', content: 'Esta invitación no tiene correo registrado.');
+
             return;
         }
 
-        SendInvitationEmail::dispatch($this->invitation);
+        SendInvitationEmail::dispatchSync($this->invitation);
         $this->invitation->update(['invitation_sent_at' => now()]);
 
-        session()->flash('success', 'Invitation sent successfully!');
+        $this->dispatch('notify', type: 'success', content: 'Invitación enviada exitosamente!');
         $this->invitation->refresh();
     }
 
@@ -37,13 +38,13 @@ class InvitationDetail extends Component
     public function copyMagicLink(): void
     {
         $this->dispatch('copy-to-clipboard', text: $this->invitation->magic_link);
-        session()->flash('success', 'Magic link copiado!');
+        $this->dispatch('notify', type: 'success', content: 'Magic link copiado!');
     }
 
     public function copyWhatsappMessage(): void
     {
         $this->dispatch('copy-to-clipboard', text: $this->getWhatsappMessage());
-        session()->flash('success', 'Mensaje de WhatsApp copiado!');
+        $this->dispatch('notify', type: 'success', content: 'Mensaje de WhatsApp copiado!');
     }
 
     public function getWhatsappMessage(): string
@@ -53,13 +54,13 @@ class InvitationDetail extends Component
         $guests = $this->invitation->max_guests;
 
         return "Hola *{$name}*! 💐\n\n"
-            . "Con mucho cariño te invitamos a celebrar nuestra boda 💒\n\n"
-            . "📅 *24 de Octubre, 2025*\n"
-            . "👥 Lugares reservados: *{$guests}*\n\n"
-            . "Confirma tu asistencia aquí 👇\n"
-            . "{$link}\n\n"
-            . "Con amor,\n"
-            . "*Hanni & Alfonso* 🤍";
+            ."Con mucho cariño te invitamos a celebrar nuestra boda 💒\n\n"
+            ."📅 *24 de Octubre, 2025*\n"
+            ."👥 Lugares reservados: *{$guests}*\n\n"
+            ."Confirma tu asistencia aquí 👇\n"
+            ."{$link}\n\n"
+            ."Con amor,\n"
+            .'*Hanni & Alfonso* 🤍';
     }
 
     public function render()
