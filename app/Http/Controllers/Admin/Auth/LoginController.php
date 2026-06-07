@@ -21,6 +21,10 @@ class LoginController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
+            if (! Auth::guard('admin')->user()->is_admin) {
+                Auth::guard('admin')->logout();
+                return back()->withErrors(['email' => 'The provided credentials do not match our records.'])->onlyInput('email');
+            }
             $request->session()->regenerate();
             return redirect()->intended(route('admin.dashboard'));
         }
