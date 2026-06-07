@@ -561,7 +561,7 @@ $couplePhotos = [
 
         {{-- Photo pile --}}
         <div id="photo-zone" class="relative">
-            <div id="photo-scatter" class="photo-scatter js-hidden" data-anim-photos>
+            <div id="photo-scatter" class="photo-scatter">
 
                 {{-- Envelope (decorative background) --}}
                 <img src="{{ asset('img/envelope-back.svg') }}"
