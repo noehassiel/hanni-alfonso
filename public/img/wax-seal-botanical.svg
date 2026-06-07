@@ -1,0 +1,116 @@
+<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Botanical wax seal — sage green, matching the watercolor illustration style.
+    Use at ~80–100px for mobile. Position centered on the fold point of the envelope.
+    Animation: on click → wiggle (rotate ±3deg) → crack → scale down + fade out.
+  -->
+  <defs>
+    <!-- Main seal gradient — gives the 3D raised wax look -->
+    <radialGradient id="seal-body" cx="42%" cy="36%" r="58%">
+      <stop offset="0%"   stop-color="#9DB888"/>
+      <stop offset="40%"  stop-color="#7D9F6A"/>
+      <stop offset="80%"  stop-color="#627E52"/>
+      <stop offset="100%" stop-color="#4E6640"/>
+    </radialGradient>
+
+    <!-- Edge darkening ring -->
+    <radialGradient id="seal-edge" cx="50%" cy="50%" r="50%">
+      <stop offset="72%" stop-color="#00000000"/>
+      <stop offset="100%" stop-color="#0000003A"/>
+    </radialGradient>
+
+    <!-- Sheen highlight (top-left catch light) -->
+    <radialGradient id="seal-sheen" cx="38%" cy="30%" r="35%">
+      <stop offset="0%"   stop-color="#FFFFFF50"/>
+      <stop offset="100%" stop-color="#FFFFFF00"/>
+    </radialGradient>
+
+    <!-- Drip texture -->
+    <radialGradient id="drip-1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8FAD7A"/>
+      <stop offset="100%" stop-color="#5E7A4E"/>
+    </radialGradient>
+
+    <filter id="seal-drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#00000030"/>
+    </filter>
+
+    <filter id="emboss" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Outer wax drips (give irregular edge typical of wax seals) -->
+  <circle cx="70" cy="70" r="65" fill="#527044" filter="url(#seal-drop-shadow)"/>
+  <ellipse cx="70" cy="70" rx="66" ry="64" fill="#527044" transform="rotate(15,70,70)"/>
+  <ellipse cx="70" cy="70" rx="63" ry="66" fill="#527044" transform="rotate(40,70,70)"/>
+  <ellipse cx="70" cy="70" rx="65" ry="63" fill="#527044" transform="rotate(70,70,70)"/>
+
+  <!-- Main seal disc -->
+  <circle cx="70" cy="70" r="62" fill="url(#seal-body)"/>
+
+  <!-- Inner embossed ring -->
+  <circle cx="70" cy="70" r="53" fill="none" stroke="#3E5934" stroke-width="2.5" opacity="0.55"/>
+  <circle cx="70" cy="70" r="51" fill="none" stroke="#7A9E67" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Edge vignette -->
+  <circle cx="70" cy="70" r="62" fill="url(#seal-edge)"/>
+
+  <!-- ─── Botanical motif ─────────────────────────────── -->
+  <!-- All motif elements use a dark green to look embossed into the wax -->
+
+  <!-- Central main stem -->
+  <path d="M70,92 C70,88 70,82 70,62" stroke="#2E4826" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+  <!-- Upper left branch -->
+  <path d="M70,72 C65,68 56,64 50,61" stroke="#2E4826" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <!-- Upper right branch -->
+  <path d="M70,72 C75,68 84,64 90,61" stroke="#2E4826" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+  <!-- Lower left branch -->
+  <path d="M70,80 C66,77 59,75 54,73" stroke="#2E4826" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  <!-- Lower right branch -->
+  <path d="M70,80 C74,77 81,75 86,73" stroke="#2E4826" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+
+  <!-- Top flower bud (tulip-like, matching the couple illustrations) -->
+  <ellipse cx="70" cy="56" rx="4.5" ry="7" fill="#2E4826"/>
+  <!-- Petal outline -->
+  <path d="M66,58 C64,52 70,47 70,47 C70,47 76,52 74,58 Z" fill="#243C1E"/>
+
+  <!-- Left bud -->
+  <ellipse cx="48" cy="59" rx="3.5" ry="5.5" fill="#2E4826" transform="rotate(-35,48,59)"/>
+  <!-- Left bud petal -->
+  <path d="M45,57 C43,52 48,48 48,48 C48,48 53,52 51,57Z" fill="#243C1E" transform="rotate(-35,48,59)"/>
+
+  <!-- Right bud -->
+  <ellipse cx="92" cy="59" rx="3.5" ry="5.5" fill="#2E4826" transform="rotate(35,92,59)"/>
+  <!-- Right bud petal -->
+  <path d="M89,57 C87,52 92,48 92,48 C92,48 97,52 95,57Z" fill="#243C1E" transform="rotate(35,92,59)"/>
+
+  <!-- Left lower leaf -->
+  <ellipse cx="53" cy="72" rx="5" ry="2.8" fill="#2E4826" transform="rotate(-25,53,72)"/>
+  <!-- Right lower leaf -->
+  <ellipse cx="87" cy="72" rx="5" ry="2.8" fill="#2E4826" transform="rotate(25,87,72)"/>
+
+  <!-- Small stem leaves (paired, mid-stem) -->
+  <ellipse cx="66" cy="77" rx="4" ry="2" fill="#2E4826" transform="rotate(-45,66,77)"/>
+  <ellipse cx="74" cy="77" rx="4" ry="2" fill="#2E4826" transform="rotate(45,74,77)"/>
+
+  <!-- Bottom small berry/bud cluster on stem tip -->
+  <circle cx="70" cy="93" r="2.5" fill="#2E4826"/>
+
+  <!-- ─── Surface highlights ──────────────────────────── -->
+  <!-- Main catch light -->
+  <ellipse cx="52" cy="45" rx="10" ry="6" fill="white" opacity="0.18" transform="rotate(-30,52,45)"/>
+  <!-- Secondary sheen -->
+  <circle cx="70" cy="70" r="62" fill="url(#seal-sheen)"/>
+
+  <!-- Micro texture dots (simulate wax grain) -->
+  <circle cx="40" cy="50" r="1.2" fill="white" opacity="0.06"/>
+  <circle cx="32" cy="70" r="1"   fill="white" opacity="0.05"/>
+  <circle cx="100" cy="45" r="1.5" fill="white" opacity="0.07"/>
+  <circle cx="108" cy="80" r="1"  fill="white" opacity="0.05"/>
+  <circle cx="55" cy="100" r="1.2" fill="white" opacity="0.06"/>
+  <circle cx="85" cy="105" r="1"  fill="white" opacity="0.05"/>
+</svg>

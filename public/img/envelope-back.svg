@@ -1,0 +1,53 @@
+<svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBF8F3"/>
+      <stop offset="100%" stop-color="#F5EFE6"/>
+    </linearGradient>
+    <linearGradient id="left-panel" x1="1" y1="0.5" x2="0" y2="0.5">
+      <stop offset="0%" stop-color="#EDE7DC" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#E8E2D6" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="right-panel" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0%" stop-color="#EDE7DC" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#E5DFD3" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="bottom-panel" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#EDE7DC" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#E2DCD0" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="paper" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" seed="5" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <filter id="drop-shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0000001A"/>
+    </filter>
+  </defs>
+
+  <!-- Shadow layer -->
+  <rect x="4" y="4" width="392" height="592" rx="2" fill="#0000000D"/>
+
+  <!-- Main body -->
+  <rect width="400" height="600" rx="1.5" fill="url(#bg)" filter="url(#paper)"/>
+
+  <!-- Left flap panel — shadow to show depth/fold -->
+  <polygon points="0,0 0,600 200,282" fill="url(#left-panel)"/>
+
+  <!-- Right flap panel -->
+  <polygon points="400,0 400,600 200,282" fill="url(#right-panel)"/>
+
+  <!-- Bottom flap panel -->
+  <polygon points="0,600 400,600 200,282" fill="url(#bottom-panel)"/>
+
+  <!-- Fold lines (subtle crease marks) -->
+  <line x1="1" y1="1" x2="200" y2="282" stroke="#C2B9AA" stroke-width="0.7" opacity="0.55"/>
+  <line x1="399" y1="1" x2="200" y2="282" stroke="#C2B9AA" stroke-width="0.7" opacity="0.55"/>
+  <line x1="1" y1="599" x2="200" y2="282" stroke="#C2B9AA" stroke-width="0.7" opacity="0.55"/>
+  <line x1="399" y1="599" x2="200" y2="282" stroke="#C2B9AA" stroke-width="0.7" opacity="0.55"/>
+
+  <!-- Outer border -->
+  <rect x="0.5" y="0.5" width="399" height="599" rx="1.5" fill="none" stroke="#C4BAA8" stroke-width="0.8" opacity="0.7"/>
+</svg>
