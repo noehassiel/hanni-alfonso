@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Mail\ConfirmationToAdminMail;
 use App\Models\Invitation;
 use App\Models\NotificationLog;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,28 +22,27 @@ class SendConfirmationToAdmins implements ShouldQueue
 
     public function handle(): void
     {
-        $admins = User::where('is_admin', true)->get();
+        $isCancellation = $this->invitation->status === 'declined';
 
-        foreach ($admins as $admin) {
-            $log = NotificationLog::create([
-                'invitation_id' => $this->invitation->id,
-                'type' => 'email',
-                'notification_type' => 'confirmation_to_admin',
-                'recipient' => $admin->email,
-                'status' => 'pending',
+        $log = NotificationLog::create([
+            'invitation_id' => $this->invitation->id,
+            'type' => 'email',
+            'notification_type' => $isCancellation ? 'cancellation_to_admin' : 'confirmation_to_admin',
+            'recipient' => 'admins',
+            'status' => 'pending',
+        ]);
+
+        try {
+            Resend::emails()->send([
+                'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
+                'to' => ['me@noehassiel.com'],
+                'subject' => $isCancellation ? 'Cancelación de Asistencia' : 'Nueva Confirmación de Asistencia',
+                'html' => (new ConfirmationToAdminMail($this->invitation))->render(),
             ]);
-
-            try {
-                Resend::emails()->send([
-                    'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
-                    'to' => [$admin->email],
-                    'subject' => 'Nueva Confirmación de Asistencia',
-                    'html' => (new ConfirmationToAdminMail($this->invitation))->render(),
-                ]);
-                $log->markAsSent();
-            } catch (\Exception $e) {
-                $log->markAsFailed($e->getMessage());
-            }
+            $log->markAsSent();
+        } catch (\Exception $e) {
+            $log->markAsFailed($e->getMessage());
+            throw $e;
         }
     }
 }

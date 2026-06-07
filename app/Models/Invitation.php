@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Invitation extends Model
@@ -47,7 +49,7 @@ class Invitation extends Model
         return $this->hasMany(Guest::class)->orderBy('position');
     }
 
-    public function primaryGuest(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function primaryGuest(): HasOne
     {
         return $this->hasOne(Guest::class)->where('is_primary', true);
     }
@@ -74,17 +76,22 @@ class Invitation extends Model
 
     public function scopeNeedsFirstReminder($query)
     {
-        return $query->whereNotNull('confirmed_at')
-            ->whereNull('first_reminder_sent_at')
-            ->whereDate('confirmed_at', '<=', now()->subMonths(2));
+        if (now()->lt(Carbon::create(2026, 8, 15))) {
+            return $query->whereRaw('0 = 1');
+        }
+
+        return $query->where('status', 'confirmed')
+            ->whereNull('first_reminder_sent_at');
     }
 
     public function scopeNeedsSecondReminder($query)
     {
-        return $query->whereNotNull('confirmed_at')
-            ->whereNotNull('first_reminder_sent_at')
-            ->whereNull('second_reminder_sent_at')
-            ->whereDate('first_reminder_sent_at', '<=', now()->subMonths(2));
+        if (now()->lt(Carbon::create(2026, 9, 15))) {
+            return $query->whereRaw('0 = 1');
+        }
+
+        return $query->where('status', 'confirmed')
+            ->whereNull('second_reminder_sent_at');
     }
 
     public function getConfirmedGuestsCountAttribute(): int
@@ -94,7 +101,7 @@ class Invitation extends Model
 
     public function getMagicLinkAttribute(): string
     {
-        if (!$this->magic_link_token) {
+        if (! $this->magic_link_token) {
             $this->generateMagicLinkToken();
         }
 
