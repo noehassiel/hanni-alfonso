@@ -794,8 +794,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ─── 3. Hero entrance animations ─────────────────────────────
     function initHeroAnims () {
-        gsap.to('#hero-label', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.1,
-            from: { opacity: 0, y: 20 } });
         gsap.fromTo('#hero-label',  { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease:'power3.out', delay:0.1 });
         gsap.fromTo('#hero-names',  { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 1.1, ease:'power3.out', delay:0.35 });
         gsap.fromTo('#hero-date',   { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, ease:'power3.out', delay:0.65 });
