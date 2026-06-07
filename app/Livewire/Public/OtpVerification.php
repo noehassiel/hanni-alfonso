@@ -12,9 +12,13 @@ class OtpVerification extends Component
     public Invitation $invitation;
 
     public string $step = 'email';
+
     public string $email = '';
+
     public string $otp = '';
+
     public string $otpError = '';
+
     public string $sentTo = '';
 
     public function mount(Invitation $invitation): void
@@ -28,14 +32,14 @@ class OtpVerification extends Component
             'email' => 'required|email',
         ], [
             'email.required' => 'Por favor ingresa tu correo electrónico.',
-            'email.email'    => 'Ingresa un correo electrónico válido.',
+            'email.email' => 'Ingresa un correo electrónico válido.',
         ]);
 
         $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         try {
             $this->invitation->update([
-                'otp_code'       => $otp,
+                'otp_code' => $otp,
                 'otp_expires_at' => now()->addMinutes(10),
             ]);
 
@@ -43,7 +47,7 @@ class OtpVerification extends Component
 
             $this->sentTo = $this->email;
             $this->step = 'otp';
-            $this->dispatch('toast', message: 'Código enviado a ' . $this->email);
+            $this->dispatch('toast', message: 'Código enviado a '.$this->email);
         } catch (\Exception $e) {
             $this->addError('email', 'No pudimos enviar el código. Intenta de nuevo.');
         }
@@ -57,7 +61,7 @@ class OtpVerification extends Component
             'otp' => 'required|digits:6',
         ], [
             'otp.required' => 'Ingresa el código de 6 dígitos.',
-            'otp.digits'   => 'El código debe tener exactamente 6 dígitos.',
+            'otp.digits' => 'El código debe tener exactamente 6 dígitos.',
         ]);
 
         $invitation = $this->invitation;
@@ -67,16 +71,19 @@ class OtpVerification extends Component
             now()->isAfter($invitation->otp_expires_at)
         ) {
             $this->otpError = 'Código incorrecto o expirado. Intenta de nuevo.';
+
             return;
         }
 
         $invitation->update([
-            'email'          => $this->email ?: $invitation->email,
-            'otp_code'       => null,
+            'email' => $this->email ?: $invitation->email,
+            'otp_code' => null,
             'otp_expires_at' => null,
         ]);
 
-        session()->put('otp_verified_' . $invitation->id, true);
+        session()->put('otp_verified_'.$invitation->id, true);
+
+        $this->dispatch('otp-verified');
 
         $this->redirect(route('invitation.show', $invitation->magic_link_token));
     }

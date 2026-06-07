@@ -214,6 +214,15 @@
             };
         }
 
+        window.addEventListener('otp-verified', () => {
+            if (window.haptics) {
+                window.haptics.trigger([
+                    { duration: 30 },
+                    { delay: 60, duration: 40, intensity: 1 },
+                ]);
+            }
+        });
+
         function toast() {
             return {
                 visible: false,
