@@ -432,7 +432,8 @@
 
             <div class="hero-content w-full text-center px-6 pb-12 sm:pb-16">
 
-                <p class="section-label text-white mb-4 js-hidden" id="hero-label">Celebra con nosotros</p>
+                <p class="section-label text-white mb-4 js-hidden" id="hero-label" style="color: white !important;">Celebra
+                    con nosotros</p>
 
                 <h1 class="hero-names mb-4 js-hidden" id="hero-names">
                     Hannia <span class="hero-amp">&</span> Alfonso
@@ -578,7 +579,7 @@
 
                 <h2 class="font-display text-2xl sm:text-3xl mb-2 js-hidden" data-anim
                     style="color:var(--charcoal);font-weight:400;">
-                    Purísima de Cubos
+                    Viñedo Tierra De Alonso
                 </h2>
 
                 <p class="font-accent italic text-lg mb-1 js-hidden" data-anim style="color:var(--olive);">
