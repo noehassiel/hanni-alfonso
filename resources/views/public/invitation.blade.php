@@ -24,6 +24,12 @@
             ['url' => 'https://maps.app.goo.gl/QnYJWEoeQxYvAu4i6?g_st=iw'],
         ];
 
+        $eventDate = \Carbon\Carbon::create(2026, 10, 24);
+        $eventDay = $eventDate->day;
+        $monthStart = $eventDate->copy()->startOfMonth();
+        $leadingBlanks = $monthStart->dayOfWeek; // 0 = Sunday
+        $daysInMonth = $eventDate->daysInMonth;
+
         $couplePhotos = [
             'couple-photo-bw-groom-lifting-bride-spinning.jpg',
             'couple-photo-bw-embracing-hacienda-corridor.jpg',
@@ -151,6 +157,66 @@
             }
         }
 
+        /* ─── Video cinemático ───────────── */
+        .video-cinematic {
+            position: relative;
+            height: 230vh;
+            background: var(--bg-dark);
+        }
+
+        .video-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-clip {
+            position: absolute;
+            inset: 0;
+            /* Starts as a framed window; expanded to full-bleed via JS scroll-scrub */
+            clip-path: inset(15% 9% 15% 9% round 18px);
+            will-change: clip-path;
+        }
+
+        .cinema-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: var(--bg-dark);
+        }
+
+        .video-vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 52%, rgba(16, 10, 6, 0.55) 100%);
+        }
+
+        .video-caption {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            pointer-events: none;
+            will-change: opacity, transform;
+        }
+
+        .video-caption-names {
+            font-family: 'Pinyon Script', cursive;
+            font-size: clamp(2.5rem, 11vw, 4.5rem);
+            color: #fff;
+            line-height: 1;
+            margin-top: 0.25rem;
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+        }
+
         /* ─── Fecha ──────────────────────── */
         .date-day {
             font-family: 'Playfair Display', serif;
@@ -201,6 +267,123 @@
             border-color: var(--autumn-sienna);
             color: var(--autumn-sienna);
             background: rgba(196, 78, 10, 0.04);
+        }
+
+        /* ─── Date headline ──────────────── */
+        .date-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 7vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            color: var(--charcoal);
+            letter-spacing: -0.01em;
+        }
+
+        .date-headline .date-headline-day {
+            color: var(--autumn-sienna);
+        }
+
+        /* ─── Countdown ──────────────────── */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            max-width: 26rem;
+            margin: 0 auto;
+        }
+
+        .cd-unit {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.85rem 0.25rem 0.65rem;
+            background: rgba(245, 240, 232, 0.6);
+            border: 1px solid var(--parchment);
+            border-radius: 2px;
+        }
+
+        .cd-num {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 7vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1;
+            color: var(--charcoal);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .cd-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--olive);
+            margin-top: 0.55rem;
+        }
+
+        /* ─── Calendar ───────────────────── */
+        .cal-card {
+            max-width: 22rem;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem;
+            background: rgba(245, 240, 232, 0.6);
+            border: 1px solid var(--parchment);
+            border-radius: 2px;
+        }
+
+        .cal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--charcoal);
+            text-align: center;
+            margin-bottom: 1.1rem;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.2rem;
+            text-align: center;
+        }
+
+        .cal-head span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--bronze);
+            padding-bottom: 0.6rem;
+        }
+
+        .cal-day {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            color: var(--charcoal);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cal-day.is-event {
+            position: relative;
+        }
+
+        .cal-day.is-event .cal-heart {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            color: var(--autumn-sienna);
+            filter: drop-shadow(0 2px 4px rgba(196, 78, 10, 0.25));
+        }
+
+        .cal-day.is-event .cal-day-num {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            font-weight: 600;
         }
 
         /* ─── RSVP section ───────────────── */
@@ -408,6 +591,9 @@
             <img id="env-flap" src="{{ asset('img/flap-removebg-preview.png') }}"
                 style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform-origin:center top;z-index:10;"
                 alt="" draggable="false">
+            <h3>
+                Esta invitación es exclusiva para ti
+            </h3>
             <div id="seal-wrapper"
                 style="position:absolute;left:50%;top:51.5%;transform:translate(-50%,-50%);width:36%;aspect-ratio:1;z-index:20;">
                 <img id="env-seal" src="{{ asset('img/wax-seal-removebg-preview.png') }}"
@@ -450,7 +636,26 @@
             </div>
         </section>
 
-        {{-- ── 2. FECHA & CALENDARIO ─────────────────────────────────── --}}
+        {{-- ── 2. VIDEO CINEMÁTICO ───────────────────────────────────── --}}
+        <section id="video-cinematic" class="video-cinematic">
+            <div class="video-sticky">
+                <div class="video-clip" id="video-clip">
+                    <video id="cinema-video" class="cinema-video" playsinline muted loop preload="none"
+                        disablepictureinpicture
+                        poster="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}">
+                        <source src="{{ asset('video.webm') }}" type="video/webm">
+                    </video>
+                    <div class="video-vignette"></div>
+                </div>
+
+                <div class="video-caption" id="video-caption">
+                    <p class="section-label" style="color: rgba(255,255,255,0.85);">Save the date</p>
+                    <p class="video-caption-names">Hannia <span class="hero-amp">&</span> Alfonso</p>
+                </div>
+            </div>
+        </section>
+
+        {{-- ── 3. FECHA & CALENDARIO ─────────────────────────────────── --}}
         <section id="fecha" class="py-20 sm:py-28 px-6 text-center relative overflow-hidden"
             style="background: var(--ivory);">
 
@@ -462,19 +667,63 @@
             <div class="relative">
                 <p class="section-label mb-6 js-hidden" data-anim>Fecha del evento</p>
 
-                <div class="flex items-center justify-center gap-4 sm:gap-8 mb-2 js-hidden" data-anim>
-                    <div class="text-right">
-                        <p class="date-month">Viernes</p>
-                    </div>
-                    <div class="date-day">24</div>
-                    <div class="text-left">
-                        <p class="date-month" style="color: var(--autumn-sienna);">Octubre</p>
-                        <p class="date-year">2026</p>
-                    </div>
-                </div>
+                <p class="date-headline mb-2 js-hidden" data-anim>
+                    Sábado <span class="date-headline-day">24</span> de Octubre, 2026
+                </p>
 
                 <p class="font-accent italic text-2xl sm:text-3xl mt-2 mb-10 js-hidden" data-anim
                     style="color: var(--olive);">4:30 de la tarde</p>
+
+                {{-- Countdown --}}
+                <div class="countdown js-hidden" style="margin-bottom: 20px" data-anim id="countdown"
+                    data-target="2026-10-24T16:30:00-06:00">
+                    <div class="cd-unit">
+                        <span class="cd-num" data-cd="months">--</span>
+                        <span class="cd-label">Meses</span>
+                    </div>
+                    <div class="cd-unit">
+                        <span class="cd-num" data-cd="days">--</span>
+                        <span class="cd-label">Días</span>
+                    </div>
+                    <div class="cd-unit">
+                        <span class="cd-num" data-cd="hours">--</span>
+                        <span class="cd-label">Horas</span>
+                    </div>
+                    <div class="cd-unit">
+                        <span class="cd-num" data-cd="minutes">--</span>
+                        <span class="cd-label">Min</span>
+                    </div>
+                    <div class="cd-unit">
+                        <span class="cd-num" data-cd="seconds">--</span>
+                        <span class="cd-label">Seg</span>
+                    </div>
+                </div>
+
+                {{-- Calendar --}}
+                <div class="cal-card js-hidden" data-anim style="margin-bottom: 20px">
+                    <p class="cal-title">Octubre 2026</p>
+                    <div class="cal-grid cal-head">
+                        <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
+                    </div>
+                    <div class="cal-grid">
+                        @for ($i = 0; $i < $leadingBlanks; $i++)
+                            <span class="cal-day"></span>
+                        @endfor
+                        @for ($day = 1; $day <= $daysInMonth; $day++)
+                            @if ($day === $eventDay)
+                                <span class="cal-day is-event">
+                                    <svg class="cal-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path
+                                            d="M12 21s-7.5-4.9-10-9.5C.6 8.9 1.7 5.7 4.6 5c1.9-.5 3.8.3 5 1.9 1.2-1.6 3.1-2.4 5-1.9 2.9.7 4 3.9 2.6 6.5C19.5 16.1 12 21 12 21z" />
+                                    </svg>
+                                    <span class="cal-day-num">{{ $day }}</span>
+                                </span>
+                            @else
+                                <span class="cal-day">{{ $day }}</span>
+                            @endif
+                        @endfor
+                    </div>
+                </div>
 
                 <span class="section-rule mb-10 block js-hidden" data-anim></span>
 
@@ -530,7 +779,7 @@
                         style="border-bottom:1px solid var(--bronze-light);border-right:1px solid var(--bronze-light);">
                     </div>
 
-                    <p class="font-accent text-lg italic" style="color: var(--olive);">Querido/a</p>
+                    <p class="font-accent text-lg italic" style="color: var(--olive);">Estimado/a</p>
                     <p class="font-display text-3xl sm:text-4xl mt-2" style="color:var(--charcoal);font-weight:500;">
                         {{ $invitation->group_name }}
                     </p>
@@ -555,6 +804,10 @@
                 <div class="text-center mb-8 px-6 js-hidden" data-anim>
                     <p class="section-label mb-3">Confirmación de asistencia</p>
                     <span class="section-rule"></span>
+                    <small>
+                        Con mucho cariño hemos reservado este espacio, pensado exclusivamente para adultos, por lo que
+                        agradecemos su comprensión al no asistir con niños.
+                    </small>
                 </div>
 
                 <livewire:public.rsvp-form :invitation="$invitation" />
@@ -923,6 +1176,72 @@
             });
             gsap.ticker.lagSmoothing(0);
 
+            // ─── Countdown ───────────────────────────────────────────────
+            (function initCountdown() {
+                const el = document.getElementById('countdown');
+                if (!el) {
+                    return;
+                }
+                const target = new Date(el.dataset.target);
+                const fields = {};
+                el.querySelectorAll('[data-cd]').forEach(function(node) {
+                    fields[node.dataset.cd] = node;
+                });
+
+                function pad(n) {
+                    return String(n).padStart(2, '0');
+                }
+
+                function tick() {
+                    const now = new Date();
+                    if (target <= now) {
+                        ['months', 'days', 'hours', 'minutes', 'seconds'].forEach(function(k) {
+                            if (fields[k]) {
+                                fields[k].textContent = '0';
+                            }
+                        });
+                        return;
+                    }
+
+                    let months = (target.getFullYear() - now.getFullYear()) * 12 +
+                        (target.getMonth() - now.getMonth());
+                    const anchor = new Date(now);
+                    anchor.setMonth(anchor.getMonth() + months);
+                    if (anchor > target) {
+                        months--;
+                        anchor.setMonth(anchor.getMonth() - 1);
+                    }
+
+                    let diff = target - anchor;
+                    const days = Math.floor(diff / 86400000);
+                    diff -= days * 86400000;
+                    const hours = Math.floor(diff / 3600000);
+                    diff -= hours * 3600000;
+                    const minutes = Math.floor(diff / 60000);
+                    diff -= minutes * 60000;
+                    const seconds = Math.floor(diff / 1000);
+
+                    if (fields.months) {
+                        fields.months.textContent = months;
+                    }
+                    if (fields.days) {
+                        fields.days.textContent = days;
+                    }
+                    if (fields.hours) {
+                        fields.hours.textContent = pad(hours);
+                    }
+                    if (fields.minutes) {
+                        fields.minutes.textContent = pad(minutes);
+                    }
+                    if (fields.seconds) {
+                        fields.seconds.textContent = pad(seconds);
+                    }
+                }
+
+                tick();
+                setInterval(tick, 1000);
+            })();
+
             // ─── 2. Envelope → reveal ────────────────────────────────────
             const overlay = document.getElementById('envelope-overlay');
             const sealWrap = document.getElementById('seal-wrapper');
@@ -954,6 +1273,7 @@
                         initHeroAnims();
                         initScrollAnims();
                         initPhotos();
+                        initCinemaVideo();
                     }
                 });
             }
@@ -1121,6 +1441,72 @@
                         });
                     }
                 });
+            }
+
+            // ─── Cinematic video (scroll-scale + autoplay on enter) ──────
+            function initCinemaVideo() {
+                const section = document.getElementById('video-cinematic');
+                const clip = document.getElementById('video-clip');
+                const caption = document.getElementById('video-caption');
+                const video = document.getElementById('cinema-video');
+                if (!section || !clip || !video) {
+                    return;
+                }
+
+                // Initial framed window → full-bleed values
+                const START = {
+                    x: 9,
+                    y: 15,
+                    r: 18
+                };
+
+                function setClip(p) {
+                    // Expansion finishes at 55% scroll so the video is full-bleed while still in view
+                    const e = Math.min(p / 0.55, 1);
+                    const x = START.x * (1 - e);
+                    const y = START.y * (1 - e);
+                    const r = START.r * (1 - e);
+                    clip.style.clipPath = `inset(${y}% ${x}% ${y}% ${x}% round ${r}px)`;
+                    if (caption) {
+                        caption.style.opacity = String(Math.max(1 - p / 0.25, 0));
+                        caption.style.transform = `translateY(${-p * 30}px)`;
+                    }
+                }
+
+                setClip(0);
+
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: true,
+                    onUpdate: function(self) {
+                        setClip(self.progress);
+                    }
+                });
+
+                // Play muted while the section is on screen; pause + free decode when off screen
+                let loaded = false;
+                const io = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            if (!loaded) {
+                                video.load();
+                                loaded = true;
+                            }
+                            video.muted = true;
+                            const playPromise = video.play();
+                            if (playPromise) {
+                                playPromise.catch(function() {});
+                            }
+                        } else {
+                            video.pause();
+                        }
+                    });
+                }, {
+                    threshold: 0.25
+                });
+                io.observe(section);
             }
 
             // ─── 5. Three.js falling leaves ──────────────────────────────
