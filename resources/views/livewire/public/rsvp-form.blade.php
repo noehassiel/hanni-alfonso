@@ -241,7 +241,7 @@
 
     {{-- Bottom flourish --}}
     <div class="mt-12 text-center">
-        <img src="{{ asset('img/wax-seal-botanical.svg') }}" class="mx-auto w-10 h-10 opacity-15" alt=""
+        <img src="{{ asset('img/wax-seal-removebg-preview.png') }}" class="mx-auto w-20 h-20" alt=""
             aria-hidden="true">
     </div>
 

@@ -190,8 +190,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-               min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-               scale(1.1) adds a slight zoom so edges are always covered. */
+                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                           scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -393,6 +393,113 @@
             font-weight: 600;
         }
 
+        /* ─── Itinerario ─────────────────── */
+        .itinerary {
+            position: relative;
+            max-width: 34rem;
+            margin: 0 auto;
+        }
+
+        /* Top bracket connector with center diamond */
+        .itinerary-bar {
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--bronze-light), var(--bronze-light), transparent);
+        }
+
+        .itinerary-diamond {
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            transform: translateX(-50%) rotate(45deg);
+            background: var(--ivory);
+            border: 1px solid var(--bronze);
+        }
+
+        .itinerary-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.35rem;
+            padding-top: 26px;
+        }
+
+        .itinerary-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Vertical drop from bracket to each icon */
+        .itinerary-item::before {
+            content: "";
+            position: absolute;
+            top: -26px;
+            left: 50%;
+            width: 1px;
+            height: 26px;
+            transform: translateX(-50%);
+            background: var(--bronze-light);
+            opacity: 0.55;
+        }
+
+        .itinerary-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--autumn-sienna);
+            margin-bottom: 0.85rem;
+        }
+
+        .itinerary-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .itinerary-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--charcoal);
+            line-height: 1.2;
+        }
+
+        .itinerary-time {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.8rem;
+            color: var(--olive);
+            margin-top: 0.3rem;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 640px) {
+            .itinerary-icon {
+                width: 56px;
+                height: 56px;
+            }
+
+            .itinerary-icon svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .itinerary-label {
+                font-size: 0.7rem;
+            }
+
+            .itinerary-time {
+                font-size: 1rem;
+            }
+        }
+
         /* ─── RSVP section ───────────────── */
         .rsvp-bg {
             position: absolute;
@@ -400,7 +507,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.08;
+            opacity: 0.2;
             pointer-events: none;
         }
 
@@ -506,9 +613,107 @@
             margin-top: 0.5rem;
         }
 
-        .dress-warning {
-            border-left: 3px solid var(--autumn-sienna);
-            padding-left: 1rem;
+        /* Swatches to avoid — thin ring + crossed out */
+        .swatch--avoid {
+            position: relative;
+            border: 1px solid var(--parchment);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .swatch--avoid::before,
+        .swatch--avoid::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -8%;
+            width: 116%;
+            height: 1.5px;
+            background: var(--autumn-burgundy);
+            border-radius: 2px;
+        }
+
+        .swatch--avoid::before {
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .swatch--avoid::after {
+            transform: translateY(-50%) rotate(-45deg);
+        }
+
+        /* Dress code heading title */
+        .dress-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: clamp(2rem, 9vw, 3.1rem);
+            letter-spacing: 0.08em;
+            line-height: 1.05;
+            color: var(--autumn-burgundy);
+        }
+
+        .dress-eyebrow {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--autumn-sienna);
+            white-space: nowrap;
+        }
+
+        /* Divider line that fills available space beside a label */
+        .dress-line {
+            flex: 1 1 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--bronze-light), transparent);
+        }
+
+        .dress-line--short {
+            flex: 0 0 32px;
+        }
+
+        /* Ellos / Ellas columns */
+        .dress-col-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 400;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--autumn-burgundy);
+            text-align: center;
+        }
+
+        .dress-col-rule {
+            display: block;
+            width: 48px;
+            height: 1px;
+            background: var(--bronze-light);
+            margin: 0.55rem auto 1.1rem;
+        }
+
+        .dress-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dress-list li {
+            position: relative;
+            padding-left: 1.1rem;
+            margin-bottom: 0.7rem;
+            font-family: 'Cormorant', Georgia, serif;
+            font-size: 1.1rem;
+            line-height: 1.35;
+            color: var(--charcoal);
+        }
+
+        .dress-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--autumn-sienna);
         }
 
         /* ─── Hotels ─────────────────────── */
@@ -648,8 +853,7 @@
             <div class="video-sticky">
                 <div class="video-clip" id="video-clip">
                     <video id="cinema-video" class="cinema-video" playsinline muted loop preload="none"
-                        disablepictureinpicture
-                        poster="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}">
+                        disablepictureinpicture poster="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}">
                         <source src="{{ asset('video.mp4') }}" type="video/mp4">
                         <source src="{{ asset('video.webm') }}" type="video/webm">
                     </video>
@@ -813,8 +1017,9 @@
                     <p class="section-label mb-3">Confirmación de asistencia</p>
                     <span class="section-rule"></span>
                     <small>
-                        Con mucho cariño hemos reservado este espacio, pensado exclusivamente para adultos, por lo que
-                        agradecemos su comprensión al no asistir con niños.
+                        Con mucho cariño hemos reservado este espacio, pensado exclusivamente para <strong>adultos</strong>,
+                        por lo que
+                        agradecemos su comprensión al <strong>no asistir con niños</strong>.
                     </small>
                 </div>
 
@@ -874,11 +1079,107 @@
             </div>
         </section>
 
+        {{-- ── 6. ITINERARIO ─────────────────────────────────────────── --}}
+        <section id="itinerario" class="py-16 sm:py-24 px-6 text-center" style="background: var(--ivory);">
+            <div class="max-w-2xl mx-auto">
+                <p class="section-label mb-3 js-hidden" data-anim>El gran día</p>
+                <h2 class="font-display text-3xl sm:text-4xl mb-4 js-hidden" data-anim
+                    style="color:var(--charcoal);font-weight:400;letter-spacing:0.06em;">Itinerario</h2>
+                <span class="section-rule mb-12 block js-hidden" data-anim></span>
+
+                <div class="itinerary js-hidden" data-anim>
+                    <span class="itinerary-bar" aria-hidden="true"></span>
+                    <span class="itinerary-diamond" aria-hidden="true"></span>
+
+                    <div class="itinerary-grid">
+                        {{-- Ceremonia --}}
+                        <div class="itinerary-item">
+                            <div class="itinerary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2.5v3M10.5 4h3" />
+                                    <path d="M5 21V10l7-4.5 7 4.5v11" />
+                                    <path d="M10 21v-4.5a2 2 0 0 1 4 0V21" />
+                                    <path d="M3.5 21h17" />
+                                </svg>
+                            </div>
+                            <p class="itinerary-label">Ceremonia</p>
+                            <p class="itinerary-time">4:30 PM</p>
+                        </div>
+
+                        {{-- Cocktail --}}
+                        <div class="itinerary-item">
+                            <div class="itinerary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 5h16l-8 8.5L4 5Z" />
+                                    <path d="M12 13.5V20M8 20h8" />
+                                    <path d="M14.5 7.5 18 4" />
+                                    <circle cx="18.4" cy="3.6" r="1" />
+                                </svg>
+                            </div>
+                            <p class="itinerary-label">Cocktail</p>
+                            <p class="itinerary-time">6:00 PM</p>
+                        </div>
+
+                        {{-- Recepción --}}
+                        <div class="itinerary-item">
+                            <div class="itinerary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 3.5 10.8 4.3 8.3 11.2Z" />
+                                    <path d="M8.3 11.2 6.8 18.6M5.3 18.9 8.6 19.7" />
+                                    <path d="M17 3.5 13.2 4.3 15.7 11.2Z" />
+                                    <path d="M15.7 11.2 17.2 18.6M15.4 19.7 18.7 18.9" />
+                                    <path d="M12 2.3v1.6M11.2 3.1h1.6" />
+                                </svg>
+                            </div>
+                            <p class="itinerary-label">Recepción</p>
+                            <p class="itinerary-time">7:00 PM</p>
+                        </div>
+
+                        {{-- Cena --}}
+                        <div class="itinerary-item">
+                            <div class="itinerary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5" />
+                                    <circle cx="12" cy="12" r="2.3" />
+                                    <path d="M3.6 3.5v3.4M5 3.5v3.4M6.4 3.5v3.4" />
+                                    <path d="M3.6 6.9h2.8M5 6.9V20.5" />
+                                    <path d="M19.2 3.5c-1.3 0-2.1 2.3-2.1 4.6 0 1.6 .9 2.4 2.1 2.4" />
+                                    <path d="M19.2 3.5V20.5" />
+                                </svg>
+                            </div>
+                            <p class="itinerary-label">Cena</p>
+                            <p class="itinerary-time">7:15 PM</p>
+                        </div>
+
+                        {{-- Fiesta --}}
+                        <div class="itinerary-item">
+                            <div class="itinerary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v2.6" />
+                                    <circle cx="12" cy="13" r="7" />
+                                    <path d="M5 13h14M12 6v14" />
+                                    <path d="M6 9.5h12M6 16.5h12" />
+                                    <path d="M8.5 7v12M15.5 7v12" />
+                                </svg>
+                            </div>
+                            <p class="itinerary-label">Fiesta</p>
+                            <p class="itinerary-time">8:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {{-- Illustration divider --}}
         <img src="{{ asset('img/venue-illustration-night-string-lights-reception.jpeg') }}" class="illus-divider"
             alt="" aria-hidden="true">
 
-        {{-- ── 6. MOMENTOS — FOTOS ARRASTRABLES ──────────────────────── --}}
+        {{-- ── 7. MOMENTOS — FOTOS ARRASTRABLES ──────────────────────── --}}
         <section id="fotos" class="py-16 sm:py-24 px-6 overflow-hidden" style="background:var(--cream);">
             <div class="text-center mb-12">
                 <p class="section-label mb-3 js-hidden" data-anim>Momentos juntos</p>
@@ -1022,17 +1323,54 @@
 
         {{-- ── 7. CÓDIGO DE VESTIMENTA ───────────────────────────────── --}}
         <section id="vestimenta" class="py-16 sm:py-24 px-6 text-center" style="background:var(--ivory);">
-            <div class="max-w-lg mx-auto">
+            <div class="max-w-xl mx-auto">
 
-                <p class="section-label mb-3 js-hidden" data-anim>Para ese día especial</p>
-                <span class="section-rule block mb-6 js-hidden" data-anim></span>
-                <h2 class="font-display text-2xl sm:text-3xl mb-4 js-hidden" data-anim
-                    style="color:var(--charcoal);font-weight:400;">Código de Vestimenta</h2>
-                <p class="font-accent italic text-lg mb-10 js-hidden" data-anim style="color:var(--olive);">Paleta
-                    otoñal · Octubre 2026</p>
+                {{-- Heading --}}
+                <p class="section-label mb-4 js-hidden" data-anim>Código de vestimenta</p>
+                <h2 class="dress-title mb-4 js-hidden" data-anim>Paleta Otoñal</h2>
 
-                {{-- Swatches --}}
-                <div class="flex justify-center gap-4 sm:gap-6 mb-10" id="swatches-row" data-anim-swatches>
+                <div class="flex items-center justify-center gap-3 mb-7 js-hidden" data-anim>
+                    <span class="dress-line dress-line--short"></span>
+                    <span class="dress-eyebrow">Formal elegante</span>
+                    <span class="dress-line dress-line--short"></span>
+                </div>
+
+                <p class="font-accent italic text-lg sm:text-xl mb-12 leading-snug js-hidden" data-anim
+                    style="color:var(--charcoal);">
+                    Queremos que luzcan espectaculares y cómodos para disfrutar de nuestra celebración.
+                </p>
+
+                {{-- Ellos / Ellas --}}
+                <div class="grid grid-cols-2 mb-12 js-hidden" data-anim>
+                    <div class="pr-4 sm:pr-8">
+                        <h3 class="dress-col-title">Ellos</h3>
+                        <span class="dress-col-rule"></span>
+                        <ul class="dress-list text-left">
+                            <li>Traje formal oscuro</li>
+                            <li>Camisa lisa</li>
+                            <li>Corbata (opcional)</li>
+                        </ul>
+                    </div>
+                    <div class="pl-4 sm:pl-8" style="border-left:1px solid var(--parchment);">
+                        <h3 class="dress-col-title">Ellas</h3>
+                        <span class="dress-col-rule"></span>
+                        <ul class="dress-list text-left">
+                            <li>Vestido largo formal</li>
+                            <li>Colores lisos (no estampados)</li>
+                            <li>No lentejuelas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Suggested palette --}}
+                <div class="flex items-center justify-center gap-4 mb-12 js-hidden" data-anim>
+                    <span class="dress-line"></span>
+                    <span class="section-label" style="white-space:nowrap;">Paleta de colores sugerida</span>
+                    <span class="dress-line"></span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-y-6 mb-12" style="gap: 16px" id="swatches-row"
+                    data-anim-swatches>
                     <div>
                         <div class="swatch mx-auto" style="background:#7B1B1B;"></div>
                         <p class="swatch-label">Borgoña</p>
@@ -1055,33 +1393,32 @@
                     </div>
                 </div>
 
-                {{-- Men & Women --}}
-                <div class="grid grid-cols-2 gap-4 mb-8 text-left js-hidden" data-anim>
-                    <div class="p-5"
-                        style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
-                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2" style="color:var(--olive);">Ellas
-                        </p>
-                        <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
-                            Vestido elegante en la paleta otoñal
-                        </p>
-                    </div>
-                    <div class="p-5"
-                        style="border:1px solid var(--parchment);border-radius:2px;background:rgba(245,240,232,0.5);">
-                        <p class="font-body text-[9px] tracking-[0.3em] uppercase mb-2" style="color:var(--olive);">Ellos
-                        </p>
-                        <p class="font-accent italic text-base leading-snug" style="color:var(--charcoal);">
-                            Traje formal, sin restricción de color
-                        </p>
-                    </div>
+                {{-- Colors to avoid --}}
+                <div class="flex items-center justify-center gap-4 mb-12 js-hidden" data-anim>
+                    <span class="dress-line"></span>
+                    <span class="section-label" style="color:var(--autumn-sienna);white-space:nowrap;">Colores a
+                        evitar</span>
+                    <span class="dress-line"></span>
                 </div>
 
-                {{-- Important warning --}}
-                <div class="dress-warning text-left py-4 js-hidden" data-anim>
-                    <p class="font-body text-[9px] tracking-[0.25em] uppercase mb-1" style="color:var(--autumn-sienna);">
-                        Nota importante</p>
-                    <p class="font-body text-sm leading-relaxed" style="color:var(--charcoal);">
-                        Los vestidos no pueden tener lentejuelas ni bordados.
-                    </p>
+                <div class="flex flex-wrap justify-center gap-y-6 mb-12" style="gap: 16px" id="avoid-row"
+                    data-anim-avoid>
+                    <div>
+                        <div class="swatch swatch--avoid mx-auto" style="background:#ffffff;"></div>
+                        <p class="swatch-label">Blanco</p>
+                    </div>
+                    <div>
+                        <div class="swatch swatch--avoid mx-auto" style="background:#ECE0CB;"></div>
+                        <p class="swatch-label">Champagne</p>
+                    </div>
+                    <div>
+                        <div class="swatch swatch--avoid mx-auto" style="background:#D6C3A0;"></div>
+                        <p class="swatch-label">Biscotti</p>
+                    </div>
+                    <div>
+                        <div class="swatch swatch--avoid mx-auto" style="background:#DBCDB2;"></div>
+                        <p class="swatch-label">Beige</p>
+                    </div>
                 </div>
 
             </div>
@@ -1089,7 +1426,7 @@
 
         {{-- Illustration divider --}}
         <img src="{{ asset('img/couple-illustration-floral-arch-wide.png') }}" class="illus-divider"
-            style="height:220px;opacity:0.55;object-position:center 20%;" alt="" aria-hidden="true">
+            style="height:auto;object-fit:contain;opacity:0.55;" alt="" aria-hidden="true">
 
         {{-- ── 8. HOSPEDAJE ──────────────────────────────────────────── --}}
         <section id="hoteles" class="py-16 sm:py-24 px-6" style="background:var(--cream);">
@@ -1410,6 +1747,28 @@
                         stagger: 0.07,
                         scrollTrigger: {
                             trigger: swatchRow,
+                            start: 'top 85%',
+                            once: true
+                        }
+                    });
+                }
+
+                // Avoid swatches stagger
+                const avoidRow = document.getElementById('avoid-row');
+                if (avoidRow) {
+                    gsap.fromTo(avoidRow.children, {
+                        opacity: 0,
+                        scale: 0.6,
+                        y: 20
+                    }, {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: 'back.out(1.7)',
+                        stagger: 0.07,
+                        scrollTrigger: {
+                            trigger: avoidRow,
                             start: 'top 85%',
                             once: true
                         }
