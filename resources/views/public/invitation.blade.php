@@ -643,6 +643,7 @@
                     <video id="cinema-video" class="cinema-video" playsinline muted loop preload="none"
                         disablepictureinpicture
                         poster="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}">
+                        <source src="{{ asset('video.mp4') }}" type="video/mp4">
                         <source src="{{ asset('video.webm') }}" type="video/webm">
                     </video>
                     <div class="video-vignette"></div>
