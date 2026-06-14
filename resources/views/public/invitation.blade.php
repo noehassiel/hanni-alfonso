@@ -190,8 +190,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-                                                           scale(1.1) adds a slight zoom so edges are always covered. */
+                                                               min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                               scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -743,6 +743,57 @@
             line-height: 1;
         }
 
+        /* ─── Mesa de regalos ────────────── */
+        .gift-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        #gift-svg {
+            width: clamp(196px, 58vw, 258px);
+            height: auto;
+            overflow: visible;
+        }
+
+        .gift-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--cream);
+            background: linear-gradient(135deg, #93272a, #6a1717);
+            border: 1px solid rgba(212, 136, 26, 0.55);
+            border-radius: 2px;
+            box-shadow: 0 12px 32px rgba(123, 27, 27, 0.26);
+            text-decoration: none;
+            cursor: pointer;
+            min-height: 52px;
+            -webkit-tap-highlight-color: transparent;
+            transition: box-shadow 0.25s, border-color 0.25s, transform 0.15s;
+        }
+
+        .gift-btn:active {
+            transform: scale(0.97);
+            border-color: var(--autumn-amber);
+            box-shadow: 0 6px 18px rgba(123, 27, 27, 0.3);
+        }
+
+        .gift-note {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6875rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--bronze);
+            margin-top: 1.1rem;
+        }
+
         /* ─── Section divider illustration ── */
         .illus-divider {
             width: 100%;
@@ -848,7 +899,7 @@
             </div>
         </section>
 
-        {{-- ── 2. VIDEO CINEMÁTICO ───────────────────────────────────── --}}
+        {{-- ── 2. VIDEO CINEMÁTICO ───────────────────────────────────── 
         <section id="video-cinematic" class="video-cinematic">
             <div class="video-sticky">
                 <div class="video-clip" id="video-clip">
@@ -866,6 +917,7 @@
                 </div>
             </div>
         </section>
+        --}}
 
         {{-- ── 3. FECHA & CALENDARIO ─────────────────────────────────── --}}
         <section id="fecha" class="py-20 sm:py-28 px-6 text-center relative overflow-hidden"
@@ -1467,7 +1519,144 @@
             </div>
         </section>
 
-        {{-- ── 9. FOOTER ─────────────────────────────────────────────── --}}
+        {{-- ── 9. MESA DE REGALOS ────────────────────────────────────── --}}
+        <section id="regalos" class="relative py-20 sm:py-28 px-6 text-center overflow-hidden"
+            style="background:var(--ivory);">
+            <div class="max-w-lg mx-auto relative">
+
+                <p class="section-label mb-3 js-hidden" data-anim>Mesa de regalos</p>
+                <span class="section-rule block mb-6 js-hidden" data-anim></span>
+                <h2 class="font-display text-2xl sm:text-3xl mb-4 js-hidden" data-anim
+                    style="color:var(--charcoal);font-weight:400;">
+                    Tu presencia es nuestro mejor regalo
+                </h2>
+                <p class="font-accent italic text-lg sm:text-xl mb-10 leading-snug js-hidden" data-anim
+                    style="color:var(--olive);">
+                    Si además deseas tener un detalle con nosotros, hemos preparado una mesa de regalos pensada para ti.
+                </p>
+
+                {{-- Animated gift box --}}
+                <div class="gift-stage">
+                    <svg id="gift-svg" class="js-hidden" viewBox="0 0 240 230" xmlns="http://www.w3.org/2000/svg"
+                        role="img" aria-label="Caja de regalo">
+                        <defs>
+                            <linearGradient id="gx-body" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#9a2a2a" />
+                                <stop offset="1" stop-color="#5e1515" />
+                            </linearGradient>
+                            <linearGradient id="gx-lid" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#a83030" />
+                                <stop offset="1" stop-color="#7a1d1d" />
+                            </linearGradient>
+                            <linearGradient id="gx-ribbon" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0" stop-color="#bd8f2e" />
+                                <stop offset="0.5" stop-color="#efc766" />
+                                <stop offset="1" stop-color="#bd8f2e" />
+                            </linearGradient>
+                            <linearGradient id="gx-bow" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#f0cd6e" />
+                                <stop offset="1" stop-color="#bd8f2e" />
+                            </linearGradient>
+                            <radialGradient id="gx-glow" cx="0.5" cy="0.5" r="0.5">
+                                <stop offset="0" stop-color="#ffe6a8" stop-opacity="0.95" />
+                                <stop offset="0.45" stop-color="#e8a820" stop-opacity="0.5" />
+                                <stop offset="1" stop-color="#e8a820" stop-opacity="0" />
+                            </radialGradient>
+                        </defs>
+
+                        {{-- Ground shadow --}}
+                        <ellipse cx="120" cy="210" rx="80" ry="11" fill="#000"
+                            opacity="0.10" />
+
+                        {{-- Box base --}}
+                        <g class="gift-base">
+                            <rect x="56" y="120" width="128" height="86" rx="4" fill="url(#gx-body)" />
+                            {{-- Interior rim (dark, behind the glow) --}}
+                            <rect x="60" y="120" width="120" height="11" fill="#000" opacity="0.22" />
+                            {{-- Vertical ribbon --}}
+                            <rect x="108" y="120" width="24" height="86" fill="url(#gx-ribbon)" />
+                            <rect x="118" y="120" width="3" height="86" fill="#fff" opacity="0.25" />
+                        </g>
+
+                        {{-- Glow from inside (revealed when lid lifts) --}}
+                        <ellipse class="gift-glow" cx="120" cy="116" rx="66" ry="46"
+                            fill="url(#gx-glow)" />
+
+                        {{-- Lid (lifts + tilts off) --}}
+                        <g class="gift-lid">
+                            <rect x="48" y="98" width="144" height="30" rx="5" fill="url(#gx-lid)" />
+                            <rect x="52" y="101" width="136" height="5" rx="2.5" fill="#fff"
+                                opacity="0.16" />
+                            <rect x="48" y="121" width="144" height="7" rx="2" fill="#000"
+                                opacity="0.14" />
+                            <rect x="108" y="98" width="24" height="30" fill="url(#gx-ribbon)" />
+                            <rect x="118" y="98" width="3" height="30" fill="#fff" opacity="0.25" />
+
+                            {{-- Bow tails --}}
+                            <path d="M118 96 C112 108 106 118 100 127 L112 124 C116 113 118 104 122 98 Z"
+                                fill="url(#gx-bow)" />
+                            <path d="M122 96 C128 108 134 118 140 127 L128 124 C124 113 122 104 118 98 Z"
+                                fill="url(#gx-bow)" />
+
+                            {{-- Bow loops --}}
+                            <ellipse cx="105" cy="84" rx="16" ry="10.5"
+                                transform="rotate(-26 105 84)" fill="url(#gx-bow)" />
+                            <ellipse cx="135" cy="84" rx="16" ry="10.5"
+                                transform="rotate(26 135 84)" fill="url(#gx-bow)" />
+                            <ellipse cx="108" cy="86" rx="7" ry="4.2"
+                                transform="rotate(-26 108 86)" fill="#000" opacity="0.12" />
+                            <ellipse cx="132" cy="86" rx="7" ry="4.2"
+                                transform="rotate(26 132 86)" fill="#000" opacity="0.12" />
+
+                            {{-- Knot --}}
+                            <rect x="112" y="80" width="16" height="15" rx="5" fill="url(#gx-bow)" />
+                            <rect x="114" y="82" width="5" height="11" rx="2.5" fill="#fff"
+                                opacity="0.22" />
+                        </g>
+
+                        {{-- Sparkles --}}
+                        <g class="gift-sparkles" fill="#eab94a">
+                            <path class="gift-sparkle" d="M74 70 Q74 78 82 78 Q74 78 74 86 Q74 78 66 78 Q74 78 74 70 Z"
+                                opacity="0.9" />
+                            <path class="gift-sparkle"
+                                d="M168 62 Q168 72 178 72 Q168 72 168 82 Q168 72 158 72 Q168 72 168 62 Z" />
+                            <path class="gift-sparkle"
+                                d="M120 45 Q120 52 127 52 Q120 52 120 59 Q120 52 113 52 Q120 52 120 45 Z" opacity="0.85" />
+                            <path class="gift-sparkle"
+                                d="M150 98 Q150 104 156 104 Q150 104 150 110 Q150 104 144 104 Q150 104 150 98 Z"
+                                opacity="0.8" />
+                            <path class="gift-sparkle"
+                                d="M92 99.5 Q92 106 98.5 106 Q92 106 92 112.5 Q92 106 85.5 106 Q92 106 92 99.5 Z"
+                                opacity="0.75" />
+                            <path class="gift-sparkle"
+                                d="M188 105 Q188 110 193 110 Q188 110 188 115 Q188 110 183 110 Q188 110 188 105 Z"
+                                opacity="0.7" />
+                        </g>
+                    </svg>
+                </div>
+
+                {{-- CTA --}}
+                <a id="gift-cta" class="gift-btn js-hidden"
+                    href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51977994" target="_blank"
+                    rel="noopener" onclick="window.haptics?.trigger('light')">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="8" width="18" height="4" rx="1" />
+                        <path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8M12 8v13" />
+                        <path d="M12 8S9.5 3.5 7 5s1.5 3 5 3M12 8s2.5-4.5 5-3-1.5 3-5 3" />
+                    </svg>
+                    Ver mesa de regalos
+                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 17L17 7M17 7H7M17 7v10" />
+                    </svg>
+                </a>
+
+                <p class="gift-note js-hidden" data-anim>Liverpool · Evento N.º 51977994</p>
+            </div>
+        </section>
+
+        {{-- ── 10. FOOTER ────────────────────────────────────────────── --}}
         <footer class="relative py-20 px-6 text-center overflow-hidden" style="background:var(--charcoal);">
 
             <img src="{{ asset('img/couple-illustration-floral-arch-tall.png') }}"
@@ -1619,6 +1808,7 @@
                         initScrollAnims();
                         initPhotos();
                         initCinemaVideo();
+                        initGiftBox();
                     }
                 });
             }
@@ -1874,6 +2064,108 @@
                     threshold: 0.25
                 });
                 io.observe(section);
+            }
+
+            // ─── Gift box → reveal registry CTA ──────────────────────────
+            function initGiftBox() {
+                const svg = document.getElementById('gift-svg');
+                const cta = document.getElementById('gift-cta');
+                if (!svg) {
+                    return;
+                }
+
+                // Keep glow + sparkles hidden until the box opens (avoid flash on fade-in)
+                gsap.set('.gift-glow', {
+                    opacity: 0,
+                    transformOrigin: '50% 50%'
+                });
+                gsap.set('.gift-sparkle', {
+                    opacity: 0,
+                    scale: 0,
+                    transformOrigin: '50% 50%'
+                });
+                gsap.set('.gift-lid', {
+                    transformOrigin: '50% 80%'
+                });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: svg,
+                        start: 'top 78%',
+                        once: true
+                    },
+                    onStart: function() {
+                        window.haptics?.trigger('medium');
+                    }
+                });
+
+                tl.fromTo(svg, {
+                        opacity: 0,
+                        y: 40,
+                        scale: 0.92
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.7,
+                        ease: 'power3.out'
+                    })
+                    .to('.gift-lid', {
+                        y: -46,
+                        rotation: -7,
+                        duration: 0.7,
+                        ease: 'back.out(1.5)'
+                    }, '-=0.15')
+                    .to('.gift-glow', {
+                        opacity: 1,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    }, '<0.05')
+                    .to('.gift-sparkle', {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.5,
+                        stagger: 0.07,
+                        ease: 'back.out(2.4)'
+                    }, '<0.05')
+                    .fromTo(cta, {
+                        opacity: 0,
+                        y: 28
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.7,
+                        ease: 'power3.out'
+                    }, '-=0.25')
+                    .add(function() {
+                        // Gentle idle life
+                        gsap.to('.gift-glow', {
+                            opacity: 0.5,
+                            scale: 1.12,
+                            duration: 1.8,
+                            repeat: -1,
+                            yoyo: true,
+                            ease: 'sine.inOut'
+                        });
+                        gsap.to('.gift-lid', {
+                            y: -52,
+                            duration: 2.4,
+                            repeat: -1,
+                            yoyo: true,
+                            ease: 'sine.inOut'
+                        });
+                        gsap.to('.gift-sparkle', {
+                            opacity: 0.4,
+                            duration: 1.1,
+                            repeat: -1,
+                            yoyo: true,
+                            ease: 'sine.inOut',
+                            stagger: {
+                                each: 0.25,
+                                from: 'random'
+                            }
+                        });
+                    });
             }
 
             // ─── 5. Three.js falling leaves ──────────────────────────────
