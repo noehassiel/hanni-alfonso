@@ -190,8 +190,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-                                                               min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-                                                               scale(1.1) adds a slight zoom so edges are always covered. */
+                                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                                           scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -899,14 +899,14 @@
             </div>
         </section>
 
-        {{-- ── 2. VIDEO CINEMÁTICO ───────────────────────────────────── 
+        {{--  2. VIDEO CINEMÁTICO ───────────────────────────────────── --}}
         <section id="video-cinematic" class="video-cinematic">
             <div class="video-sticky">
                 <div class="video-clip" id="video-clip">
                     <video id="cinema-video" class="cinema-video" playsinline muted loop preload="none"
                         disablepictureinpicture poster="{{ asset('img/venue-illustration-orchard-path-sunset.jpeg') }}">
-                        <source src="{{ asset('video.mp4') }}" type="video/mp4">
-                        <source src="{{ asset('video.webm') }}" type="video/webm">
+                        <source src="{{ asset('video-new.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('video-new.webm') }}" type="video/webm">
                     </video>
                     <div class="video-vignette"></div>
                 </div>
@@ -917,7 +917,6 @@
                 </div>
             </div>
         </section>
-        --}}
 
         {{-- ── 3. FECHA & CALENDARIO ─────────────────────────────────── --}}
         <section id="fecha" class="py-20 sm:py-28 px-6 text-center relative overflow-hidden"
