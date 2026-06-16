@@ -106,7 +106,7 @@
                 <div class="grow" style="height:1px;background:var(--parchment);"></div>
             </div>
 
-            <p style="margin: 20px 0; font-size:14px; font-weight:300; text-align:center">
+            <p style="margin: 20px 0; font-size:16px; font-weight:300; text-align:center">
                 Debido a que el evento es de cupo limitado, <strong>NO</strong> se podrá añadir ningún pase adicional a
                 los marcados
                 en tu invitación.

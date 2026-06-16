@@ -46,13 +46,15 @@
             --bg-dark: #16120e;
             --autumn-burgundy: #7B1B1B;
             --autumn-amber: #D4881A;
-            --autumn-forest: #1C5C3A;
             --autumn-sienna: #C44E0A;
-            --autumn-caramel: #9B6A18;
             --hero-overlay: rgba(16, 10, 6, 0.55);
         }
 
         /* Lenis — prevent flash before init */
+        html {
+            font-size: 18px;
+        }
+
         html.lenis {
             height: auto;
         }
@@ -130,7 +132,7 @@
         }
 
         .hero-amp {
-            font-family: 'Cormorant', serif;
+            font-family: 'Playfair Display', serif;
             font-style: italic;
             color: var(--autumn-amber);
         }
@@ -190,8 +192,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-                                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-                                                                           scale(1.1) adds a slight zoom so edges are always covered. */
+                                                                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                                                                           scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -395,17 +397,23 @@
 
         /* ─── Itinerario ─────────────────── */
         .itinerary {
-            position: relative;
-            max-width: 34rem;
+            max-width: 26rem;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .itinerary-row {
+            position: relative;
         }
 
         /* Top bracket connector with center diamond */
         .itinerary-bar {
             position: absolute;
             top: 0;
-            left: 10%;
-            right: 10%;
+            left: 8%;
+            right: 8%;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--bronze-light), var(--bronze-light), transparent);
         }
@@ -423,7 +431,7 @@
 
         .itinerary-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 0.35rem;
             padding-top: 26px;
         }
@@ -699,7 +707,7 @@
             position: relative;
             padding-left: 1.1rem;
             margin-bottom: 0.7rem;
-            font-family: 'Cormorant', Georgia, serif;
+            font-family: 'Playfair Display', Georgia, serif;
             font-size: 1.1rem;
             line-height: 1.35;
             color: var(--charcoal);
@@ -879,10 +887,11 @@
 
             <div class="hero-gradient"></div>
 
-            <div class="hero-content w-full text-center px-6 pb-12 sm:pb-16">
+            <p class="section-label text-white js-hidden absolute top-10 left-0 right-0 text-center" id="hero-label"
+                style="color: white !important;">Celebra
+                con nosotros</p>
 
-                <p class="section-label text-white mb-4 js-hidden" id="hero-label" style="color: white !important;">Celebra
-                    con nosotros</p>
+            <div class="hero-content w-full text-center px-6 pb-12 sm:pb-16">
 
                 <h1 class="hero-names mb-4 js-hidden" id="hero-names">
                     Hannia <span class="hero-amp">&</span> Alfonso
@@ -891,9 +900,6 @@
                 <div class="js-hidden" id="hero-date">
                     <p class="font-display text-xl sm:text-2xl text-white/75 tracking-[0.25em] font-light">
                         24 · OCTUBRE · 2026
-                    </p>
-                    <p class="font-accent italic text-base sm:text-lg mt-1" style="color: rgba(212,136,26,0.8);">
-                        4:30 de la tarde
                     </p>
                 </div>
             </div>
@@ -1060,18 +1066,15 @@
 
         {{-- ── 4. RSVP ───────────────────────────────────────────────── --}}
         <section id="rsvp" class="relative py-16 sm:py-24 px-0 overflow-hidden" style="background:var(--ivory);">
-            <img src="{{ asset('img/venue-illustration-night-string-lights-reception.jpeg') }}" class="rsvp-bg"
-                alt="">
-
             <div class="relative" style="z-index:1;">
                 <div class="text-center mb-8 px-6 js-hidden" data-anim>
                     <p class="section-label mb-3">Confirmación de asistencia</p>
                     <span class="section-rule"></span>
-                    <small>
+                    <p style="font-size: 22px; color: var(--olive); margin-top: 12px;">
                         Con mucho cariño hemos reservado este espacio, pensado exclusivamente para <strong>adultos</strong>,
                         por lo que
                         agradecemos su comprensión al <strong>no asistir con niños</strong>.
-                    </small>
+                    </p>
                 </div>
 
                 <livewire:public.rsvp-form :invitation="$invitation" />
@@ -1139,87 +1142,110 @@
                 <span class="section-rule mb-12 block js-hidden" data-anim></span>
 
                 <div class="itinerary js-hidden" data-anim>
-                    <span class="itinerary-bar" aria-hidden="true"></span>
-                    <span class="itinerary-diamond" aria-hidden="true"></span>
-
-                    <div class="itinerary-grid">
-                        {{-- Ceremonia --}}
-                        <div class="itinerary-item">
-                            <div class="itinerary-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2.5v3M10.5 4h3" />
-                                    <path d="M5 21V10l7-4.5 7 4.5v11" />
-                                    <path d="M10 21v-4.5a2 2 0 0 1 4 0V21" />
-                                    <path d="M3.5 21h17" />
-                                </svg>
+                    {{-- Fila 1: Recepción · Ceremonia · Cocktail --}}
+                    <div class="itinerary-row">
+                        <span class="itinerary-bar" aria-hidden="true"></span>
+                        <span class="itinerary-diamond" aria-hidden="true"></span>
+                        <div class="itinerary-grid">
+                            {{-- Recepción --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="M12 7v5l3 3" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Recepción</p>
+                                <p class="itinerary-time">4:30 PM</p>
                             </div>
-                            <p class="itinerary-label">Ceremonia</p>
-                            <p class="itinerary-time">4:30 PM</p>
+
+                            {{-- Ceremonia --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2.5v3M10.5 4h3" />
+                                        <path d="M5 21V10l7-4.5 7 4.5v11" />
+                                        <path d="M10 21v-4.5a2 2 0 0 1 4 0V21" />
+                                        <path d="M3.5 21h17" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Ceremonia</p>
+                                <p class="itinerary-time">5:00 PM</p>
+                            </div>
+
+                            {{-- Cocktail --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 5h16l-8 8.5L4 5Z" />
+                                        <path d="M12 13.5V20M8 20h8" />
+                                        <path d="M14.5 7.5 18 4" />
+                                        <circle cx="18.4" cy="3.6" r="1" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Cocktail</p>
+                                <p class="itinerary-time">6:00 PM</p>
+                            </div>
                         </div>
+                    </div>
 
-                        {{-- Cocktail --}}
-                        <div class="itinerary-item">
-                            <div class="itinerary-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 5h16l-8 8.5L4 5Z" />
-                                    <path d="M12 13.5V20M8 20h8" />
-                                    <path d="M14.5 7.5 18 4" />
-                                    <circle cx="18.4" cy="3.6" r="1" />
-                                </svg>
+                    {{-- Fila 2: Cena · Baile · Fin --}}
+                    <div class="itinerary-row">
+                        <span class="itinerary-bar" aria-hidden="true"></span>
+                        <span class="itinerary-diamond" aria-hidden="true"></span>
+                        <div class="itinerary-grid">
+                            {{-- Cena --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="5" />
+                                        <circle cx="12" cy="12" r="2.3" />
+                                        <path d="M3.6 3.5v3.4M5 3.5v3.4M6.4 3.5v3.4" />
+                                        <path d="M3.6 6.9h2.8M5 6.9V20.5" />
+                                        <path d="M19.2 3.5c-1.3 0-2.1 2.3-2.1 4.6 0 1.6 .9 2.4 2.1 2.4" />
+                                        <path d="M19.2 3.5V20.5" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Cena</p>
+                                <p class="itinerary-time">7:00 PM</p>
                             </div>
-                            <p class="itinerary-label">Cocktail</p>
-                            <p class="itinerary-time">6:00 PM</p>
-                        </div>
 
-                        {{-- Recepción --}}
-                        <div class="itinerary-item">
-                            <div class="itinerary-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M7 3.5 10.8 4.3 8.3 11.2Z" />
-                                    <path d="M8.3 11.2 6.8 18.6M5.3 18.9 8.6 19.7" />
-                                    <path d="M17 3.5 13.2 4.3 15.7 11.2Z" />
-                                    <path d="M15.7 11.2 17.2 18.6M15.4 19.7 18.7 18.9" />
-                                    <path d="M12 2.3v1.6M11.2 3.1h1.6" />
-                                </svg>
+                            {{-- Baile --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="18" r="1.5" />
+                                        <circle cx="19" cy="16" r="1.5" />
+                                        <path d="M9 18V6l10-2v12" />
+                                        <path d="M9 10l10-2" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Baile</p>
+                                <p class="itinerary-time">10:30 PM</p>
                             </div>
-                            <p class="itinerary-label">Recepción</p>
-                            <p class="itinerary-time">7:00 PM</p>
-                        </div>
 
-                        {{-- Cena --}}
-                        <div class="itinerary-item">
-                            <div class="itinerary-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="5" />
-                                    <circle cx="12" cy="12" r="2.3" />
-                                    <path d="M3.6 3.5v3.4M5 3.5v3.4M6.4 3.5v3.4" />
-                                    <path d="M3.6 6.9h2.8M5 6.9V20.5" />
-                                    <path d="M19.2 3.5c-1.3 0-2.1 2.3-2.1 4.6 0 1.6 .9 2.4 2.1 2.4" />
-                                    <path d="M19.2 3.5V20.5" />
-                                </svg>
+                            {{-- Fin --}}
+                            <div class="itinerary-item">
+                                <div class="itinerary-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 15h20" />
+                                        <path d="M5 15l1.5-5h11L19 15" />
+                                        <path d="M4 15v3h16v-3" />
+                                        <circle cx="7" cy="18.5" r="1.5" />
+                                        <circle cx="17" cy="18.5" r="1.5" />
+                                        <path d="M9 10v-2M12 9.5V7M15 10V8" />
+                                        <path d="M8.5 7.5h7" />
+                                    </svg>
+                                </div>
+                                <p class="itinerary-label">Fin</p>
+                                <p class="itinerary-time">1:30 AM</p>
                             </div>
-                            <p class="itinerary-label">Cena</p>
-                            <p class="itinerary-time">7:15 PM</p>
-                        </div>
-
-                        {{-- Fiesta --}}
-                        <div class="itinerary-item">
-                            <div class="itinerary-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v2.6" />
-                                    <circle cx="12" cy="13" r="7" />
-                                    <path d="M5 13h14M12 6v14" />
-                                    <path d="M6 9.5h12M6 16.5h12" />
-                                    <path d="M8.5 7v12M15.5 7v12" />
-                                </svg>
-                            </div>
-                            <p class="itinerary-label">Fiesta</p>
-                            <p class="itinerary-time">8:00 PM</p>
                         </div>
                     </div>
                 </div>
@@ -1377,8 +1403,8 @@
             <div class="max-w-xl mx-auto">
 
                 {{-- Heading --}}
-                <p class="section-label mb-4 js-hidden" data-anim>Código de vestimenta</p>
-                <h2 class="dress-title mb-4 js-hidden" data-anim>Paleta Otoñal</h2>
+                <h2 class="dress-title mb-4 js-hidden" data-anim>Código de vestimenta</h2>
+                <p class="section-label mb-4 js-hidden" data-anim>Paleta Otoñal</p>
 
                 <div class="flex items-center justify-center gap-3 mb-7 js-hidden" data-anim>
                     <span class="dress-line dress-line--short"></span>
@@ -1420,27 +1446,19 @@
                     <span class="dress-line"></span>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-y-6 mb-12" style="gap: 16px" id="swatches-row"
+                <div class="flex flex-wrap justify-center gap-y-6 mb-12" style="gap: 24px" id="swatches-row"
                     data-anim-swatches>
                     <div>
                         <div class="swatch mx-auto" style="background:#7B1B1B;"></div>
                         <p class="swatch-label">Borgoña</p>
                     </div>
                     <div>
-                        <div class="swatch mx-auto" style="background:#E8A820;"></div>
+                        <div class="swatch mx-auto" style="background:#D4881A;"></div>
                         <p class="swatch-label">Dorado</p>
-                    </div>
-                    <div>
-                        <div class="swatch mx-auto" style="background:#1C5C3A;"></div>
-                        <p class="swatch-label">Verde</p>
                     </div>
                     <div>
                         <div class="swatch mx-auto" style="background:#C44E0A;"></div>
                         <p class="swatch-label">Terracota</p>
-                    </div>
-                    <div>
-                        <div class="swatch mx-auto" style="background:#9B6A18;"></div>
-                        <p class="swatch-label">Caramelo</p>
                     </div>
                 </div>
 
@@ -1457,14 +1475,6 @@
                     <div>
                         <div class="swatch swatch--avoid mx-auto" style="background:#ffffff;"></div>
                         <p class="swatch-label">Blanco</p>
-                    </div>
-                    <div>
-                        <div class="swatch swatch--avoid mx-auto" style="background:#ECE0CB;"></div>
-                        <p class="swatch-label">Champagne</p>
-                    </div>
-                    <div>
-                        <div class="swatch swatch--avoid mx-auto" style="background:#D6C3A0;"></div>
-                        <p class="swatch-label">Biscotti</p>
                     </div>
                     <div>
                         <div class="swatch swatch--avoid mx-auto" style="background:#DBCDB2;"></div>
@@ -1656,7 +1666,7 @@
         </section>
 
         {{-- ── 10. FOOTER ────────────────────────────────────────────── --}}
-        <footer class="relative py-20 px-6 text-center overflow-hidden" style="background:var(--charcoal);">
+        <footer class="relative py-20 px-6 text-center overflow-hidden" style="background:var(--autumn-burgundy);">
 
             <img src="{{ asset('img/couple-illustration-floral-arch-tall.png') }}"
                 class="absolute inset-0 w-full h-full object-cover opacity-[0.07] pointer-events-none"

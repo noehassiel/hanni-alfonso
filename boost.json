@@ -2,7 +2,7 @@
     "agents": [
         "claude_code"
     ],
-    "cloud": false,
+    "cloud": true,
     "guidelines": true,
     "mcp": true,
     "nightwatch": false,
@@ -12,6 +12,7 @@
         "laravel-best-practices",
         "fluxui-development",
         "livewire-development",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "deploying-laravel-cloud"
     ]
 }
