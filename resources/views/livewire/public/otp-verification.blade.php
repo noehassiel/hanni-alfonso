@@ -140,6 +140,11 @@
                             Intentar de nuevo
                         </button>
                     </p>
+
+                    <p class="font-body text-xs text-center mt-3 leading-relaxed" style="color: var(--bronze-light);">
+                        Si no lo encuentras en tu bandeja de entrada, revisa la carpeta de
+                        correo no deseado o spam.
+                    </p>
                 </div>
             @endif
 
