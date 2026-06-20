@@ -15,7 +15,7 @@
                     <tr>
                         <td
                             style="background: linear-gradient(135deg, #fef3e2, #fdf2f8); padding: 30px; text-align: center;">
-                            <h1 style="color: #292524; font-size: 32px; font-weight: 300; margin: 0;">Hanni & Alfonso
+                            <h1 style="color: #292524; font-size: 32px; font-weight: 300; margin: 0;">Alfonso & Hannia
                             </h1>
                             <p style="color: #b45309; font-size: 14px; margin: 8px 0 0 0;">24 de Octubre, 2026</p>
                         </td>
@@ -52,7 +52,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 20px 30px; text-align: center; border-top: 1px solid #e8e4df;">
-                            <p style="color: #a8a29e; font-size: 12px; margin: 0;">Con carino, Hanni & Alfonso</p>
+                            <p style="color: #a8a29e; font-size: 12px; margin: 0;">Con carino, Alfonso & Hannia</p>
                         </td>
                     </tr>
                 </table>

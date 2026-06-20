@@ -20,7 +20,7 @@
                                 style="color: #92400e; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; margin: 0 0 16px 0;">
                                 Código de Verificación</p>
                             <h1 style="color: #292524; font-size: 36px; font-weight: 300; margin: 0; line-height: 1.2;">
-                                Hanni & Alfonso</h1>
+                                Alfonso & Hannia</h1>
                             <p style="color: #b45309; font-size: 16px; margin: 12px 0 0 0;">24 de Octubre, 2026</p>
                         </td>
                     </tr>
