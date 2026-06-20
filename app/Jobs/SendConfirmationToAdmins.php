@@ -35,7 +35,7 @@ class SendConfirmationToAdmins implements ShouldQueue
         try {
             Resend::emails()->send([
                 'from' => config('mail.from.name').' <'.config('mail.from.address').'>',
-                'to' => ['hannia.actionschool@gmail.com', 'denisse-bandala@hotmail.com, azamar.neria@gmail.com'],
+                'to' => ['hannia.actionschool@gmail.com', 'denisse-bandala@hotmail.com', 'azamar.neria@gmail.com'],
                 'subject' => $isCancellation ? 'Cancelación de Asistencia' : 'Nueva Confirmación de Asistencia',
                 'html' => (new ConfirmationToAdminMail($this->invitation))->render(),
             ]);
