@@ -192,8 +192,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-                                                                                                                                   min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-                                                                                                                                   scale(1.1) adds a slight zoom so edges are always covered. */
+                                                                                                                                       min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                                                                                                       scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -1248,7 +1248,7 @@
                                     </svg>
                                 </div>
                                 <p class="itinerary-label">Baile</p>
-                                <p class="itinerary-time">10:30 PM</p>
+                                <p class="itinerary-time">8:30 PM</p>
                             </div>
 
                             {{-- Fin --}}

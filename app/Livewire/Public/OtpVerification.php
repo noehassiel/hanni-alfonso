@@ -49,6 +49,7 @@ class OtpVerification extends Component
             $this->step = 'otp';
             $this->dispatch('toast', message: 'Código enviado a '.$this->email);
         } catch (\Exception $e) {
+            report($e);
             $this->addError('email', 'No pudimos enviar el código. Intenta de nuevo.');
         }
     }
