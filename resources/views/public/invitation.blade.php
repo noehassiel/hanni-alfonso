@@ -192,8 +192,8 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(1.1);
             /* Cover the viewport by height: video height = webview height, sides cropped.
-                                                                                                           min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
-                                                                                                           scale(1.1) adds a slight zoom so edges are always covered. */
+                                                                                                                                   min-* technique works where object-fit on <video> is unreliable (iOS/in-app browsers).
+                                                                                                                                   scale(1.1) adds a slight zoom so edges are always covered. */
             width: auto;
             height: auto;
             min-width: 100%;
@@ -393,6 +393,21 @@
             z-index: 1;
             color: #fff;
             font-weight: 600;
+        }
+
+        /* ─── Separador fotográfico ─────────── */
+        .photo-divider {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .photo-divider img {
+            width: 100%;
+            height: clamp(20rem, 70vh, 34rem);
+            object-fit: cover;
+            object-position: center 30%;
+            display: block;
         }
 
         /* ─── Itinerario ─────────────────── */
@@ -940,9 +955,6 @@
                     Sábado <span class="date-headline-day">24</span> de Octubre, 2026
                 </p>
 
-                <p class="font-accent italic text-2xl sm:text-3xl mt-2 mb-10 js-hidden" data-anim
-                    style="color: var(--olive);">4:30 de la tarde</p>
-
                 {{-- Countdown --}}
                 <div class="countdown js-hidden" style="margin-bottom: 20px" data-anim id="countdown"
                     data-target="2026-10-24T16:30:00-06:00">
@@ -983,7 +995,7 @@
                                 <span class="cal-day is-event">
                                     <svg class="cal-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                         <path
-                                            d="M12 21s-7.5-4.9-10-9.5C.6 8.9 1.7 5.7 4.6 5c1.9-.5 3.8.3 5 1.9 1.2-1.6 3.1-2.4 5-1.9 2.9.7 4 3.9 2.6 6.5C19.5 16.1 12 21 12 21z" />
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                     </svg>
                                     <span class="cal-day-num">{{ $day }}</span>
                                 </span>
@@ -1028,6 +1040,11 @@
                     </a>
                 </div>
             </div>
+        </section>
+
+        {{-- ── SEPARADOR FOTOGRÁFICO ──────────────────────────────────── --}}
+        <section class="photo-divider js-hidden" data-anim>
+            <img src="{{ asset('img/sec-1.jpeg') }}" alt="" loading="lazy">
         </section>
 
         {{-- ── 3. MENSAJE PERSONAL ───────────────────────────────────── --}}
@@ -1081,6 +1098,11 @@
             </div>
         </section>
 
+        {{-- ── SEPARADOR FOTOGRÁFICO ──────────────────────────────────── --}}
+        <section class="photo-divider js-hidden" data-anim>
+            <img src="{{ asset('img/sec-2.jpeg') }}" alt="" loading="lazy">
+        </section>
+
         {{-- ── 5. UBICACIÓN ──────────────────────────────────────────── --}}
         <section id="ubicacion" class="relative py-20 sm:py-28 overflow-hidden" style="min-height:480px;">
 
@@ -1121,7 +1143,7 @@
                     class="inline-flex items-center gap-2 px-8 py-4 font-body text-xs tracking-[0.25em] uppercase
                       transition-all duration-300 js-hidden"
                     data-anim
-                    style="background:var(--charcoal);color:var(--cream);border-radius:2px;text-decoration:none;min-height:48px;"
+                    style="background:var(--autumn-burgundy);color:var(--cream);border-radius:2px;text-decoration:none;min-height:48px;"
                     onclick="window.haptics?.trigger('light')">
                     <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1457,8 +1479,16 @@
                         <p class="swatch-label">Dorado</p>
                     </div>
                     <div>
+                        <div class="swatch mx-auto" style="background:#2E6B47;"></div>
+                        <p class="swatch-label">Verde</p>
+                    </div>
+                    <div>
                         <div class="swatch mx-auto" style="background:#C44E0A;"></div>
                         <p class="swatch-label">Terracota</p>
+                    </div>
+                    <div>
+                        <div class="swatch mx-auto" style="background:#A8791E;"></div>
+                        <p class="swatch-label">Caramelo</p>
                     </div>
                 </div>
 
@@ -1483,6 +1513,11 @@
                 </div>
 
             </div>
+        </section>
+
+        {{-- ── SEPARADOR FOTOGRÁFICO ──────────────────────────────────── --}}
+        <section class="photo-divider js-hidden" data-anim>
+            <img src="{{ asset('img/sec-3.jpeg') }}" alt="" loading="lazy" style="object-position:center 55%;">
         </section>
 
         {{-- Illustration divider --}}
@@ -1663,6 +1698,11 @@
 
                 <p class="gift-note js-hidden" data-anim>Liverpool · Evento N.º 51977994</p>
             </div>
+        </section>
+
+        {{-- ── SEPARADOR FOTOGRÁFICO ──────────────────────────────────── --}}
+        <section class="photo-divider js-hidden" data-anim>
+            <img src="{{ asset('img/sec-4.jpeg') }}" alt="" loading="lazy" style="object-position:center 40%;">
         </section>
 
         {{-- ── 10. FOOTER ────────────────────────────────────────────── --}}

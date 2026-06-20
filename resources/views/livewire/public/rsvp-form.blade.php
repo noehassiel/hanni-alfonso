@@ -222,10 +222,10 @@
         {{-- Submit --}}
         <button type="button" wire:click="submit" wire:loading.attr="disabled"
             class="mt-10 w-full font-body text-xs tracking-[0.3em] uppercase transition-all duration-300 flex items-center justify-center gap-2"
-            style="background:var(--charcoal);color:var(--cream);border:none;border-radius:2px;
+            style="background:var(--autumn-burgundy);color:var(--cream);border:none;border-radius:2px;
                        min-height:52px;letter-spacing:0.3em;cursor:pointer;"
-            x-data @mouseenter="$el.style.background='var(--charcoal-soft)'"
-            @mouseleave="$el.style.background='var(--charcoal)'" wire:loading.class="opacity-50 cursor-not-allowed">
+            x-data @mouseenter="$el.style.background='#9a2424'"
+            @mouseleave="$el.style.background='var(--autumn-burgundy)'" wire:loading.class="opacity-50 cursor-not-allowed">
             <span wire:loading.remove wire:target="submit">Confirmar asistencia</span>
             <span wire:loading wire:target="submit" class="flex items-center gap-2">
                 <svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"
